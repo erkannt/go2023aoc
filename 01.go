@@ -72,8 +72,6 @@ func ProblemTwo(input bufio.Scanner) int {
 		switch len(numbers) {
 		case 0:
 			continue
-		case 1:
-			total += numbers[0]
 		default:
 			total += numbers[0]*10 + numbers[len(numbers)-1]
 		}
