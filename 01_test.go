@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func ProblemOne(input bufio.Reader) int {
+func ProblemOne(input bufio.Scanner) int {
 	return 42
 }
 
@@ -18,7 +18,7 @@ a1b2c3d4e5f
 treb7uchet
 `
 
-	reader := bufio.NewReader(strings.NewReader(input))
+	reader := bufio.NewScanner(strings.NewReader(input))
 	ans := ProblemOne(*reader)
 	if ans != 142 {
 		t.Error("wrong result", ans)
