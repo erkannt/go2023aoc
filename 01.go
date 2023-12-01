@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -54,12 +53,7 @@ func ProblemTwo(input bufio.Scanner) int {
 		if len(numbers) == 0 {
 			continue
 		}
-		firstAndLast := fmt.Sprintf("%d%d", numbers[0], numbers[len(numbers)-1])
-		value, err := strconv.Atoi(firstAndLast)
-		if err != nil {
-			println("Can't convert to number", line, firstAndLast)
-			os.Exit(1)
-		}
+		value := numbers[0]*10 + numbers[len(numbers)-1]
 		total += value
 	}
 	return total
