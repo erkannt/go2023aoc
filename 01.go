@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -41,8 +42,27 @@ func ProblemOne(input bufio.Scanner) int {
 	return total
 }
 
+func toNumbers(line string) []int {
+	return []int{}
+}
+
 func ProblemTwo(input bufio.Scanner) int {
-	return ProblemOne(input)
+	total := 0
+	for input.Scan() {
+		line := input.Text()
+		numbers := toNumbers(line)
+		if len(numbers) == 0 {
+			continue
+		}
+		firstAndLast := fmt.Sprintf("%d%d", numbers[0], numbers[len(numbers)-1])
+		value, err := strconv.Atoi(firstAndLast)
+		if err != nil {
+			println("Can't convert to number", line, firstAndLast)
+			os.Exit(1)
+		}
+		total += value
+	}
+	return total
 }
 
 func main() {
