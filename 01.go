@@ -50,7 +50,7 @@ func ToNumbers(line string) []int {
 			windowMin = pos + 1
 			continue
 		}
-		value := valueOfLastNumberWord(pos-windowMin, line[windowMin:pos+1])
+		value := valueOfLastNumberWord(line[windowMin : pos+1])
 		if value != 0 {
 			numbers = append(numbers, value)
 		}
@@ -58,10 +58,10 @@ func ToNumbers(line string) []int {
 	return numbers
 }
 
-func valueOfLastNumberWord(pos int, line string) int {
+func valueOfLastNumberWord(input string) int {
 	numbersByName := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9}
-	for i := 0; i <= pos; i++ {
-		word := line[i : pos+1]
+	for i := 0; i <= len(input)-1; i++ {
+		word := input[i:]
 		value := numbersByName[word]
 		if value != 0 {
 			return value
