@@ -56,7 +56,6 @@ func ToNumbers(line string) []int {
 			word = line[i : pos+1]
 			value := numbersByName[word]
 			if value != 0 {
-				windowMin = pos + 1
 				numbers = append(numbers, value)
 				break
 			}
