@@ -9,7 +9,10 @@ import (
 )
 
 func onlyIfNumber(r rune) rune {
-	return r
+	if r <= 9 {
+		return r
+	}
+	return -1
 }
 
 func ProblemOne(input bufio.Scanner) int {
