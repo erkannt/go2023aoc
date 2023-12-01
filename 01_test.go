@@ -29,6 +29,7 @@ func ProblemOne(input bufio.Scanner) int {
 		}
 		return value
 	}
+	println("no values found")
 	return -1
 }
 
