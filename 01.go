@@ -41,6 +41,10 @@ func ProblemOne(input bufio.Scanner) int {
 	return total
 }
 
+func ProblemTwo(input bufio.Scanner) int {
+	return ProblemOne(input)
+}
+
 func main() {
 	file, err := os.Open("./input/01.txt")
 	if err != nil {
@@ -51,5 +55,5 @@ func main() {
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
 
 	file.Seek(0, 0)
-	println("Problem2:", ProblemOne(*bufio.NewScanner(file)))
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }

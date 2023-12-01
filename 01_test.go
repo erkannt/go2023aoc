@@ -33,7 +33,7 @@ zoneight234
 `
 
 	reader := bufio.NewScanner(strings.NewReader(input))
-	ans := ProblemOne(*reader)
+	ans := ProblemTwo(*reader)
 	if ans != 281 {
 		t.Error("wrong result", ans)
 	}
