@@ -9,7 +9,7 @@ import (
 )
 
 func onlyIfNumber(r rune) rune {
-	if r <= 9 {
+	if r <= '9' {
 		return r
 	}
 	return -1
