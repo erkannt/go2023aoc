@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -38,4 +39,16 @@ func ProblemOne(input bufio.Scanner) int {
 		total += value
 	}
 	return total
+}
+
+func main() {
+	file, err := os.Open("./input/01.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	result := ProblemOne(*scanner)
+	println(result)
 }
