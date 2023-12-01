@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"reflect"
 	"strings"
 	"testing"
@@ -41,10 +42,19 @@ zoneight234
 }
 
 func TestToNumbers(t *testing.T) {
-	input := "zoneight234"
-	expected := []int{1, 8, 2, 3, 4}
-	result := ToNumbers(input)
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Input: %v\nResult: %v\nExpected %v", input, result, expected)
+	cases := []struct {
+		Input    string
+		Expected []int
+	}{
+		{"zoneight234", []int{1, 8, 2, 3, 4}},
+	}
+	for _, testCase := range cases {
+		t.Run(fmt.Sprintf("%s -> %v", testCase.Input, testCase.Expected), func(t *testing.T) {
+			result := ToNumbers(testCase.Input)
+			if !reflect.DeepEqual(result, testCase.Expected) {
+				t.Errorf("actual: %v", result)
+			}
+		})
+
 	}
 }
