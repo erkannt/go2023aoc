@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"bufio"
+	"strings"
 	"testing"
 )
 
-func ProblemOne(input string) int {
-	fmt.Println("Hello, world.")
+func ProblemOne(input bufio.Reader) int {
 	return 42
 }
 
@@ -17,7 +17,9 @@ pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet
 `
-	ans := ProblemOne(input)
+
+	reader := bufio.NewReader(strings.NewReader(input))
+	ans := ProblemOne(*reader)
 	if ans != 142 {
 		t.Error("wrong result", ans)
 	}
