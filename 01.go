@@ -57,11 +57,14 @@ func ProblemTwo(input bufio.Scanner) int {
 	for input.Scan() {
 		line := input.Text()
 		numbers := toNumbers(line)
-		if len(numbers) == 0 {
+		switch len(numbers) {
+		case 0:
 			continue
+		case 1:
+			total += numbers[0]
+		default:
+			total += numbers[0]*10 + numbers[len(numbers)-1]
 		}
-		value := numbers[0]*10 + numbers[len(numbers)-1]
-		total += value
 	}
 	return total
 }
