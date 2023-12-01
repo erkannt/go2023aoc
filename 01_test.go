@@ -16,6 +16,9 @@ func ProblemOne(input bufio.Scanner) int {
 	for input.Scan() {
 		line := input.Text()
 		numbers := strings.Map(onlyIfNumber, line)
+		if numbers == "" {
+			continue
+		}
 		value, err := strconv.Atoi(numbers)
 		if err != nil {
 			println("Can't convert to number", numbers)
