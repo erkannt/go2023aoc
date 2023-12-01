@@ -20,3 +20,21 @@ treb7uchet
 		t.Error("wrong result", ans)
 	}
 }
+
+func TestProblemTwo(t *testing.T) {
+	input := `
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+`
+
+	reader := bufio.NewScanner(strings.NewReader(input))
+	ans := ProblemOne(*reader)
+	if ans != 281 {
+		t.Error("wrong result", ans)
+	}
+}
