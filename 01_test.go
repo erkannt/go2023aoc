@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -36,5 +37,14 @@ zoneight234
 	ans := ProblemTwo(*reader)
 	if ans != 281 {
 		t.Error("wrong result", ans)
+	}
+}
+
+func TestToNumbers(t *testing.T) {
+	input := "zoneight234"
+	expected := []int{1, 8, 2, 3, 4}
+	result := ToNumbers(input)
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Input: %v\nResult: %v\nExpected %v", input, result, expected)
 	}
 }

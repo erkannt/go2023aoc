@@ -41,7 +41,7 @@ func ProblemOne(input bufio.Scanner) int {
 	return total
 }
 
-func toNumbers(line string) []int {
+func ToNumbers(line string) []int {
 	numbersByName := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9}
 	numbers := []int{}
 	word := ""
@@ -69,7 +69,7 @@ func ProblemTwo(input bufio.Scanner) int {
 	total := 0
 	for input.Scan() {
 		line := input.Text()
-		numbers := toNumbers(line)
+		numbers := ToNumbers(line)
 		switch len(numbers) {
 		case 0:
 			continue
