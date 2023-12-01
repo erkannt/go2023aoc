@@ -43,11 +43,48 @@ func ProblemOne(input bufio.Scanner) int {
 
 func toNumbers(line string) []int {
 	numbers := []int{}
-	for _, char := range line {
+	word := ""
+	start := 0
+	for pos, char := range line {
 		if char <= '9' {
 			numbers = append(numbers, int(char-'0'))
+			start = pos + 1
 			continue
 		}
+		word = line[start : pos+1]
+		switch word {
+		case "zero":
+			numbers = append(numbers, 0)
+			start = pos + 1
+		case "one":
+			numbers = append(numbers, 1)
+			start = pos + 1
+		case "two":
+			numbers = append(numbers, 2)
+			start = pos + 1
+		case "three":
+			numbers = append(numbers, 3)
+			start = pos + 1
+		case "four":
+			numbers = append(numbers, 4)
+			start = pos + 1
+		case "five":
+			numbers = append(numbers, 5)
+			start = pos + 1
+		case "six":
+			numbers = append(numbers, 6)
+			start = pos + 1
+		case "seven":
+			numbers = append(numbers, 7)
+			start = pos + 1
+		case "eight":
+			numbers = append(numbers, 8)
+			start = pos + 1
+		case "nine":
+			numbers = append(numbers, 9)
+			start = pos + 1
+		}
+		println(line, word)
 	}
 	return numbers
 }
