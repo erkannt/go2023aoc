@@ -7,6 +7,9 @@ import (
 )
 
 func ProblemOne(input bufio.Scanner) int {
+	for input.Scan() {
+		println(input.Text())
+	}
 	return 42
 }
 
