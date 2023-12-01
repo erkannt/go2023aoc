@@ -42,7 +42,14 @@ func ProblemOne(input bufio.Scanner) int {
 }
 
 func toNumbers(line string) []int {
-	return []int{}
+	numbers := []int{}
+	for _, char := range line {
+		if char <= '9' {
+			numbers = append(numbers, int(char-'0'))
+			continue
+		}
+	}
+	return numbers
 }
 
 func ProblemTwo(input bufio.Scanner) int {
