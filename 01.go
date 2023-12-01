@@ -42,9 +42,7 @@ func ProblemOne(input bufio.Scanner) int {
 }
 
 func ToNumbers(line string) []int {
-	numbersByName := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9}
 	numbers := []int{}
-	word := ""
 	windowMin := 0
 	for pos, char := range line {
 		if char <= '9' {
@@ -52,16 +50,24 @@ func ToNumbers(line string) []int {
 			windowMin = pos + 1
 			continue
 		}
-		for i := windowMin; i <= pos; i++ {
-			word = line[i : pos+1]
-			value := numbersByName[word]
-			if value != 0 {
-				numbers = append(numbers, value)
-				break
-			}
+		value := valueOfLastNumberWord(windowMin, pos, line)
+		if value != 0 {
+			numbers = append(numbers, value)
 		}
 	}
 	return numbers
+}
+
+func valueOfLastNumberWord(windowMin int, pos int, line string) int {
+	numbersByName := map[string]int{"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9}
+	for i := windowMin; i <= pos; i++ {
+		word := line[i : pos+1]
+		value := numbersByName[word]
+		if value != 0 {
+			return value
+		}
+	}
+	return 0
 }
 
 func ProblemTwo(input bufio.Scanner) int {
