@@ -2,15 +2,28 @@ package main
 
 import (
 	"bufio"
+	"os"
+	"strconv"
 	"strings"
 	"testing"
 )
 
+func onlyIfNumber(r rune) rune {
+	return r
+}
+
 func ProblemOne(input bufio.Scanner) int {
 	for input.Scan() {
-		println(input.Text())
+		line := input.Text()
+		numbers := strings.Map(onlyIfNumber, line)
+		value, err := strconv.Atoi(numbers)
+		if err != nil {
+			println("Can't convert to number", numbers)
+			os.Exit(1)
+		}
+		return value
 	}
-	return 42
+	return -1
 }
 
 func TestProblemOne(t *testing.T) {
