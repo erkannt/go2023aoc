@@ -47,6 +47,8 @@ func TestToNumbers(t *testing.T) {
 		Expected []int
 	}{
 		{"zoneight234", []int{1, 8, 2, 3, 4}},
+		{"eighthree", []int{8, 3}},
+		{"sevenine", []int{7, 9}},
 	}
 	for _, testCase := range cases {
 		t.Run(fmt.Sprintf("%s -> %v", testCase.Input, testCase.Expected), func(t *testing.T) {
