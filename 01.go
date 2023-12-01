@@ -48,7 +48,8 @@ func main() {
 	}
 	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	result := ProblemOne(*scanner)
-	println(result)
+	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
+
+	file.Seek(0, 0)
+	println("Problem2:", ProblemOne(*bufio.NewScanner(file)))
 }
