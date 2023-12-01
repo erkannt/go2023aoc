@@ -16,21 +16,25 @@ func onlyIfNumber(r rune) rune {
 }
 
 func ProblemOne(input bufio.Scanner) int {
+	total := 0
 	for input.Scan() {
 		line := input.Text()
 		numbers := strings.Map(onlyIfNumber, line)
 		if numbers == "" {
 			continue
 		}
-		value, err := strconv.Atoi(numbers)
+		runes := []rune(numbers)
+		firstAndLast := string([]rune{runes[0], runes[len(runes)-1]})
+		println(firstAndLast)
+		value, err := strconv.Atoi(firstAndLast)
 		if err != nil {
 			println("Can't convert to number", numbers)
 			os.Exit(1)
 		}
-		return value
+		total += value
 	}
 	println("no values found")
-	return -1
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
