@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -19,12 +20,19 @@ type game struct {
 	reveals []reveal
 }
 
+func toId(input string) int {
+	idString, _ := strings.CutPrefix(input, "Game ")
+	idValue, err := strconv.Atoi(idString)
+	if err != nil {
+		log.Fatalf("Failed to parse game id from: %s", input)
+	}
+	return idValue
+}
+
 func toGame(input string) game {
 	idPart, _, _ := strings.Cut(input, ":")
-	idString, _ := strings.CutPrefix(idPart, "Game ")
-	idValue, _ := strconv.Atoi(idString)
 	return game{
-		id:      idValue,
+		id:      toId(idPart),
 		reveals: []reveal{},
 	}
 }
