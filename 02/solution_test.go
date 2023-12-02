@@ -43,17 +43,17 @@ func TestToGame(t *testing.T) {
 	input := "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
 	expected := game{
 		id: 1,
-		reveals: []reveal{
-			reveal{
+		reveals: []cubeset{
+			cubeset{
 				blue: 3,
 				red:  4,
 			},
-			reveal{
+			cubeset{
 				red:   1,
 				green: 2,
 				blue:  6,
 			},
-			reveal{
+			cubeset{
 				green: 2,
 			},
 		},

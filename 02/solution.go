@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type reveal struct {
+type cubeset struct {
 	blue  int
 	red   int
 	green int
@@ -16,7 +16,7 @@ type reveal struct {
 
 type game struct {
 	id      int
-	reveals []reveal
+	reveals []cubeset
 }
 
 func toId(input string) int {
@@ -28,12 +28,12 @@ func toId(input string) int {
 	return idValue
 }
 
-func toReveals(input string) []reveal {
+func toReveals(input string) []cubeset {
 	revealStrings := strings.Split(input, "; ")
-	var reveals = []reveal{}
+	var reveals = []cubeset{}
 	for _, revealString := range revealStrings {
 		colorParts := strings.Split(revealString, ", ")
-		var reveal = reveal{}
+		var reveal = cubeset{}
 		for _, colorPart := range colorParts {
 			colorPart = strings.Trim(colorPart, " ")
 			countString, colorName, _ := strings.Cut(colorPart, " ")
@@ -89,8 +89,8 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return total
 }
 
-func getMinCubes(input game) reveal {
-	return reveal{
+func getMinCubes(input game) cubeset {
+	return cubeset{
 		blue:  0,
 		red:   0,
 		green: 0,
