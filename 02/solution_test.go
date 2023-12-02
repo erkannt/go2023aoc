@@ -6,8 +6,39 @@ import (
 	"testing"
 )
 
+type game struct {
+	id    int
+	blue  int
+	red   int
+	green int
+}
+
+func toGame(input string) game {
+	return game{
+		id:    0,
+		blue:  0,
+		red:   0,
+		green: 0,
+	}
+}
+
+func isPossible(game game) bool {
+	return true
+}
+
 func ProblemOne(scanner bufio.Scanner) int {
-	return 0
+	total := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		game := toGame(line)
+		if isPossible(game) {
+			total += game.id
+		}
+	}
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
