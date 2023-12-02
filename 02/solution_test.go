@@ -44,16 +44,16 @@ func TestToGame(t *testing.T) {
 	expected := game{
 		id: 1,
 		reveals: []cubeset{
-			cubeset{
+			{
 				blue: 3,
 				red:  4,
 			},
-			cubeset{
+			{
 				red:   1,
 				green: 2,
 				blue:  6,
 			},
-			cubeset{
+			{
 				green: 2,
 			},
 		},
