@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -19,8 +20,11 @@ type game struct {
 }
 
 func toGame(input string) game {
+	idPart, _, _ := strings.Cut(input, ":")
+	idString, _ := strings.CutPrefix(idPart, "Game ")
+	idValue, _ := strconv.Atoi(idString)
 	return game{
-		id:      0,
+		id:      idValue,
 		reveals: []reveal{},
 	}
 }
