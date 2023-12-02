@@ -6,19 +6,21 @@ import (
 	"testing"
 )
 
-type game struct {
-	id    int
+type reveal struct {
 	blue  int
 	red   int
 	green int
 }
 
+type game struct {
+	id      int
+	reveals []reveal
+}
+
 func toGame(input string) game {
 	return game{
-		id:    0,
-		blue:  0,
-		red:   0,
-		green: 0,
+		id:      0,
+		reveals: []reveal{},
 	}
 }
 
