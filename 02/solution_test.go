@@ -67,6 +67,11 @@ func toGame(input string) game {
 }
 
 func isPossible(game game) bool {
+	for _, reveal := range game.reveals {
+		if reveal.red > 12 || reveal.green > 13 || reveal.blue > 14 {
+			return false
+		}
+	}
 	return true
 }
 
