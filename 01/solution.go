@@ -84,7 +84,7 @@ func ProblemTwo(input bufio.Scanner) int {
 }
 
 func main() {
-	file, err := os.Open("./input/01.txt")
+	file, err := os.Open("./input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
