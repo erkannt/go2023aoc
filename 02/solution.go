@@ -90,11 +90,19 @@ func ProblemOne(scanner bufio.Scanner) int {
 }
 
 func getMinCubes(input game) cubeset {
-	return cubeset{
-		blue:  0,
-		red:   0,
-		green: 0,
+	var minCubeset = cubeset{}
+	for _, reveal := range input.reveals {
+		if reveal.red > minCubeset.red {
+			minCubeset.red = reveal.red
+		}
+		if reveal.green > minCubeset.green {
+			minCubeset.green = reveal.green
+		}
+		if reveal.blue > minCubeset.blue {
+			minCubeset.blue = reveal.blue
+		}
 	}
+	return minCubeset
 }
 
 func ProblemTwo(scanner bufio.Scanner) int {
