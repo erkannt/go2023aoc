@@ -30,10 +30,35 @@ func toId(input string) int {
 }
 
 func toGame(input string) game {
-	idPart, _, _ := strings.Cut(input, ":")
+	idPart, revealsPart, _ := strings.Cut(input, ":")
+
+	revealStrings := strings.Split(revealsPart, "; ")
+	var reveals = []reveal{}
+	for _, revealString := range revealStrings {
+		colorParts := strings.Split(revealString, ", ")
+		var reveal = reveal{}
+		for _, colorPart := range colorParts {
+			colorPart = strings.Trim(colorPart, " ")
+			countString, colorName, _ := strings.Cut(colorPart, " ")
+			countValue, err := strconv.Atoi(countString)
+			if err != nil {
+				log.Fatalf("Failed to parse color count from: '%s' (part of: '%s')", countString, colorPart)
+			}
+			switch colorName {
+			case "red":
+				reveal.red = countValue
+			case "green":
+				reveal.green = countValue
+			case "blue":
+				reveal.blue = countValue
+			}
+		}
+		reveals = append(reveals, reveal)
+	}
+
 	return game{
 		id:      toId(idPart),
-		reveals: []reveal{},
+		reveals: reveals,
 	}
 }
 
