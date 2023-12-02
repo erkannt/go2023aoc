@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -55,6 +56,32 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 	reader := bufio.NewScanner(strings.NewReader(input))
 	ans := ProblemOne(*reader)
 	if ans != 8 {
+		t.Error("wrong result", ans)
+	}
+}
+
+func TestToGame(t *testing.T) {
+	input := "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
+	expected := game{
+		id: 1,
+		reveals: []reveal{
+			reveal{
+				blue: 3,
+				red:  4,
+			},
+			reveal{
+				red:   1,
+				green: 2,
+				blue:  6,
+			},
+			reveal{
+				green: 2,
+			},
+		},
+	}
+
+	ans := toGame(input)
+	if !reflect.DeepEqual(ans, expected) {
 		t.Error("wrong result", ans)
 	}
 }
