@@ -29,10 +29,8 @@ func toId(input string) int {
 	return idValue
 }
 
-func toGame(input string) game {
-	idPart, revealsPart, _ := strings.Cut(input, ":")
-
-	revealStrings := strings.Split(revealsPart, "; ")
+func toReveals(input string) []reveal {
+	revealStrings := strings.Split(input, "; ")
 	var reveals = []reveal{}
 	for _, revealString := range revealStrings {
 		colorParts := strings.Split(revealString, ", ")
@@ -55,10 +53,16 @@ func toGame(input string) game {
 		}
 		reveals = append(reveals, reveal)
 	}
+	return reveals
+
+}
+
+func toGame(input string) game {
+	idPart, revealsPart, _ := strings.Cut(input, ":")
 
 	return game{
 		id:      toId(idPart),
-		reveals: reveals,
+		reveals: toReveals(revealsPart),
 	}
 }
 
