@@ -89,8 +89,26 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return total
 }
 
-func ProblemTwo(bufio.Scanner) int {
-	return 0
+func getMinCubes(input game) reveal {
+	return reveal{
+		blue:  0,
+		red:   0,
+		green: 0,
+	}
+}
+
+func ProblemTwo(scanner bufio.Scanner) int {
+	total := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		game := toGame(line)
+		minCubes := getMinCubes(game)
+		total += minCubes.red * minCubes.green * minCubes.blue
+	}
+	return total
 }
 
 func main() {
