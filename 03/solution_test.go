@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -54,6 +55,33 @@ func TestProblemOne(t *testing.T) {
 	reader := bufio.NewScanner(strings.NewReader(input))
 	result := ProblemOne(*reader)
 	if result != expected {
-		t.Fatal("Wrong answer: ", result)
+		t.Error("Wrong answer: ", result)
+	}
+}
+
+func TestParseSchematic(t *testing.T) {
+	input := `
+467..114..
+...*......
+`
+	expectedNumbers := []Partnumber{
+		{value: 467,
+			location: Location{x: 0, y: 0},
+			lenght:   3,
+		},
+		{value: 114,
+			location: Location{x: 5, y: 0},
+			lenght:   3,
+		},
+	}
+	expectedSymbolLocations := []Location{{x: 3, y: 1}}
+
+	reader := bufio.NewScanner(strings.NewReader(input))
+	resultNumbers, resultSymbolLocations := parseSchematic(*reader)
+	if !reflect.DeepEqual(resultNumbers, expectedNumbers) {
+		t.Error("Wrong answer: ", resultNumbers)
+	}
+	if !reflect.DeepEqual(resultSymbolLocations, expectedSymbolLocations) {
+		t.Error("Wrong answer: ", resultSymbolLocations)
 	}
 }
