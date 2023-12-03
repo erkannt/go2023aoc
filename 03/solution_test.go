@@ -29,6 +29,30 @@ func TestProblemOne(t *testing.T) {
 	}
 }
 
+func TestProblemOneFromReddit(t *testing.T) {
+	input := `
+12.......*..
++.........34
+.......-12..
+..78........
+..*....60...
+78..........
+.......23...
+....90*12...
+............
+2.2......12.
+.*.........*
+1.1.......56
+`
+	expected := 413
+
+	reader := bufio.NewScanner(strings.NewReader(input))
+	result := ProblemOne(*reader)
+	if result != expected {
+		t.Error("Wrong answer: ", result)
+	}
+}
+
 func TestParseSchematic(t *testing.T) {
 	input := `
 467..114..
