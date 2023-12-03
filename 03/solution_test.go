@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -19,7 +20,25 @@ type Partnumber struct {
 }
 
 func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
-	return []Partnumber{}, []Location{}
+	symbolRegx, _ := regexp.Compile("[^0-9.]")
+
+	var numbers = []Partnumber{}
+	var locations = []Location{}
+
+	var y = 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		hits := symbolRegx.FindAllIndex([]byte(line), -1)
+		for _, hit := range hits {
+			locations = append(locations, Location{x: hit[0], y: y})
+		}
+		y += 1
+	}
+
+	return numbers, locations
 }
 
 func isAdjacent(number Partnumber, locations []Location) bool {
