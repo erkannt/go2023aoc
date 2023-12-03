@@ -106,4 +106,7 @@ func main() {
 	defer file.Close()
 
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
+
+	file.Seek(0, 0)
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }
