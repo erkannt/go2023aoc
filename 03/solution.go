@@ -77,6 +77,20 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return total
 }
 
+func ProblemTwo(scanner bufio.Scanner) int {
+	var total = 0
+	partNumbers, symbolLocations := parseSchematic(scanner)
+	for _, number := range partNumbers {
+		for _, loc := range symbolLocations {
+			if isAdjacent(number, loc) {
+				total += number.value
+				break
+			}
+		}
+	}
+	return total
+}
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {

@@ -30,6 +30,28 @@ func TestProblemOne(t *testing.T) {
 	}
 }
 
+func TestProblemTwo(t *testing.T) {
+	input := `
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
+`
+	expected := 467835
+
+	reader := bufio.NewScanner(strings.NewReader(input))
+	result := ProblemTwo(*reader)
+	if result != expected {
+		t.Error("Wrong answer: ", result)
+	}
+}
+
 func TestProblemOneFromReddit(t *testing.T) {
 	input := `
 12.......*..
