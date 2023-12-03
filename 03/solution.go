@@ -9,8 +9,9 @@ import (
 )
 
 type Location struct {
-	x int
-	y int
+	isGear bool
+	x      int
+	y      int
 }
 
 type Partnumber struct {
@@ -34,7 +35,7 @@ func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
 		}
 		symbolLocs := symbolRegx.FindAllIndex([]byte(line), -1)
 		for _, loc := range symbolLocs {
-			locations = append(locations, Location{x: loc[0], y: y})
+			locations = append(locations, Location{x: loc[0], y: y, isGear: line[loc[0]] == []byte("*")[0]})
 		}
 
 		numberLocs := numberRegx.FindAllIndex([]byte(line), -1)

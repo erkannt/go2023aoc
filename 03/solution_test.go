@@ -169,7 +169,7 @@ func TestParseSchematic(t *testing.T) {
 			lenght:   3,
 		},
 	}
-	expectedSymbolLocations := []Location{{x: 3, y: 1}}
+	expectedSymbolLocations := []Location{{x: 3, y: 1, isGear: true}}
 
 	reader := bufio.NewScanner(strings.NewReader(input))
 	resultNumbers, resultSymbolLocations := parseSchematic(*reader)
