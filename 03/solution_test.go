@@ -61,7 +61,7 @@ func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
 func isAdjacent(number Partnumber, locations []Location) bool {
 	var neighbours = []string{
 		fmt.Sprintf("%d%d", number.location.x-1, number.location.y),
-		fmt.Sprintf("%d%d", number.location.x+1, number.location.y),
+		fmt.Sprintf("%d%d", number.location.x+number.lenght, number.location.y),
 	}
 	for i := number.location.x - 1; i <= number.location.x+number.lenght+1; i++ {
 		neighbours = append(neighbours, fmt.Sprintf("%d%d", i, number.location.y-1))
