@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -21,6 +22,7 @@ type Partnumber struct {
 
 func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
 	symbolRegx, _ := regexp.Compile("[^0-9.]")
+	numberRegx, _ := regexp.Compile("[0-9]+")
 
 	var numbers = []Partnumber{}
 	var locations = []Location{}
@@ -31,9 +33,23 @@ func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
 		if line == "" {
 			continue
 		}
-		hits := symbolRegx.FindAllIndex([]byte(line), -1)
-		for _, hit := range hits {
-			locations = append(locations, Location{x: hit[0], y: y})
+		symbolLocs := symbolRegx.FindAllIndex([]byte(line), -1)
+		for _, loc := range symbolLocs {
+			locations = append(locations, Location{x: loc[0], y: y})
+		}
+
+		numberLocs := numberRegx.FindAllIndex([]byte(line), -1)
+		for _, loc := range numberLocs {
+			value, _ := strconv.Atoi(line[loc[0]:loc[1]])
+			newNumber := Partnumber{
+				value:  value,
+				lenght: loc[1] - loc[0],
+				location: Location{
+					x: loc[0],
+					y: y,
+				},
+			}
+			numbers = append(numbers, newNumber)
 		}
 		y += 1
 	}
