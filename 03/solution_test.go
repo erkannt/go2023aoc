@@ -53,6 +53,21 @@ func TestProblemOneFromReddit(t *testing.T) {
 	}
 }
 
+func TestProblemOneRealPartialInput(t *testing.T) {
+	input := `
+........954......104.......52......70..............206.806........708..........................217...............................440........
+.......@...................*.............................*.664..............677................@....459.........687.........................
+..................378.....398........548..495..........983....*................*..282.................*...........$.248.....409.......165...
+`
+	expected := 5897
+
+	reader := bufio.NewScanner(strings.NewReader(input))
+	result := ProblemOne(*reader)
+	if result != expected {
+		t.Error("Wrong answer: ", result)
+	}
+}
+
 func TestParseSchematic(t *testing.T) {
 	input := `
 467..114..
