@@ -56,11 +56,9 @@ func parseSchematic(scanner bufio.Scanner) ([]Partnumber, []Location) {
 	return numbers, locations
 }
 
-func isAdjacent(number Partnumber, locations []Location) bool {
-	for _, loc := range locations {
-		if loc.x >= number.location.x-1 && loc.x <= number.location.x+number.lenght && loc.y >= number.location.y-1 && loc.y <= number.location.y+1 {
-			return true
-		}
+func isAdjacent(number Partnumber, location Location) bool {
+	if location.x >= number.location.x-1 && location.x <= number.location.x+number.lenght && location.y >= number.location.y-1 && location.y <= number.location.y+1 {
+		return true
 	}
 	return false
 }
@@ -69,8 +67,11 @@ func ProblemOne(scanner bufio.Scanner) int {
 	var total = 0
 	partNumbers, symbolLocations := parseSchematic(scanner)
 	for _, number := range partNumbers {
-		if isAdjacent(number, symbolLocations) {
-			total += number.value
+		for _, loc := range symbolLocations {
+			if isAdjacent(number, loc) {
+				total += number.value
+				break
+			}
 		}
 	}
 	return total

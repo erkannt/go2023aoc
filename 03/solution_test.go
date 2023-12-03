@@ -166,7 +166,7 @@ func TestIsAdjacent1(t *testing.T) {
 			location: Location{x: 0, y: 0},
 			lenght:   3,
 		},
-		[]Location{{x: 1, y: 1}},
+		Location{x: 1, y: 1},
 	)
 	if result != true {
 		t.Error("Wrong answer")
@@ -179,7 +179,7 @@ func TestIsAdjacent2(t *testing.T) {
 			location: Location{x: 5, y: 0},
 			lenght:   3,
 		},
-		[]Location{{x: 1, y: 1}},
+		Location{x: 1, y: 1},
 	)
 	if result != false {
 		t.Error("Wrong answer")
