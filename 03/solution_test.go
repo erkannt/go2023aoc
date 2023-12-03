@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"reflect"
 	"strings"
 	"testing"
@@ -65,6 +66,69 @@ func TestProblemOneRealPartialInput(t *testing.T) {
 	result := ProblemOne(*reader)
 	if result != expected {
 		t.Error("Wrong answer: ", result)
+	}
+}
+
+func TestMoreCases(t *testing.T) {
+	cases := []struct {
+		Input    string
+		Expected int
+	}{
+		{`
+........
+.24..4..
+......*.
+`, 4},
+		{`
+........
+.24$-4..
+......*.
+`, 28},
+		{`
+11....11
+..$..$..
+11....11
+`, 44},
+		{`
+$......$
+.1....1.
+.1....1.
+$......$
+`, 4},
+		{`
+$......$
+.11..11.
+.11..11.
+$......$
+`, 44},
+		{`
+$11
+...
+11$
+...
+`, 22},
+		{`
+$..
+.11
+.11
+$..
+..$
+11.
+11.
+..$
+`, 44},
+		{`
+11.$.
+`, 0},
+	}
+	for _, testCase := range cases {
+		t.Run(fmt.Sprintf("%s -> %v", testCase.Input, testCase.Expected), func(t *testing.T) {
+			result := ProblemOne(*bufio.NewScanner(strings.NewReader(testCase.Input)))
+			if !reflect.DeepEqual(result, testCase.Expected) {
+				t.Errorf("actual: %v", result)
+			}
+		})
+
 	}
 }
 
