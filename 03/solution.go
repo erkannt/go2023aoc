@@ -81,12 +81,18 @@ func ProblemOne(scanner bufio.Scanner) int {
 func ProblemTwo(scanner bufio.Scanner) int {
 	var total = 0
 	partNumbers, symbolLocations := parseSchematic(scanner)
-	for _, number := range partNumbers {
-		for _, loc := range symbolLocations {
+	for _, loc := range symbolLocations {
+		if !loc.isGear {
+			continue
+		}
+		var partValues = []int{}
+		for _, number := range partNumbers {
 			if isAdjacent(number, loc) {
-				total += number.value
-				break
+				partValues = append(partValues, number.value)
 			}
+		}
+		if len(partValues) == 2 {
+			total += partValues[0] * partValues[1]
 		}
 	}
 	return total
