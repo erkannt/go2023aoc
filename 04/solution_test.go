@@ -2,16 +2,28 @@ package main
 
 import (
 	"bufio"
+	"math"
+	"regexp"
 	"strings"
 	"testing"
 )
 
 func parseCard(card string) ([]string, []string) {
-	return []string{}, []string{}
+	sectionsRegex, _ := regexp.Compile("(Card [0-9]+: )([0-9 ]+)|([0-9]+)")
+	numberRegex, _ := regexp.Compile("[0-9]")
+
+	sections := sectionsRegex.FindAllStringSubmatch(card, -1)
+	winningNumbers := numberRegex.FindAllString(sections[1][0], -1)
+	cardNumbers := numberRegex.FindAllString(sections[2][0], -1)
+	return winningNumbers, cardNumbers
 }
 
 func cardValue(matchCount int) int {
-	return 0
+	if matchCount == 0 {
+		return 0
+	}
+	value := math.Pow(2, float64(matchCount)-1)
+	return int(value)
 }
 
 func ProblemOne(scanner bufio.Scanner) int {
