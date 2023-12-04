@@ -11,8 +11,8 @@ import (
 )
 
 func parseCard(card string) ([]string, []string) {
-	sectionsRegex, _ := regexp.Compile("(Card [0-9]+: )([0-9 ]+)|([0-9]+)")
-	numberRegex, _ := regexp.Compile("[0-9]")
+	sectionsRegex, _ := regexp.Compile("([0-9]+):([0-9 ]+)|([0-9 ]+)")
+	numberRegex, _ := regexp.Compile("[0-9]+")
 
 	sections := sectionsRegex.FindAllStringSubmatch(card, -1)
 	winningNumbers := numberRegex.FindAllString(sections[1][0], -1)
