@@ -68,7 +68,7 @@ func ProblemTwo(scanner bufio.Scanner) int {
 				}
 			}
 		}
-		for i := 0; i <= len(matches); i++ {
+		for i := 1; i <= len(matches); i++ {
 			cardCounts[id+i] += cardCounts[id]
 		}
 	}
