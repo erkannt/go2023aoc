@@ -6,8 +6,33 @@ import (
 	"testing"
 )
 
-func ProblemOne(scanner bufio.Scanner) int {
+func parseCard(card string) ([]string, []string) {
+	return []string{}, []string{}
+}
+
+func cardValue(matchCount int) int {
 	return 0
+}
+
+func ProblemOne(scanner bufio.Scanner) int {
+	var total = 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		winningNumbers, cardNumbers := parseCard(line)
+		var matches = []string{}
+		for _, cardNumber := range cardNumbers {
+			for _, winningNumber := range winningNumbers {
+				if cardNumber == winningNumber {
+					matches = append(matches, cardNumber)
+				}
+			}
+		}
+		total += cardValue(len(matches))
+	}
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
@@ -23,7 +48,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 	result := ProblemOne(*bufio.NewScanner(strings.NewReader(input)))
 
 	if expected != result {
-		t.Errorf("Expected: %v\nResult: %v", expected, result)
+		t.Errorf("\nExpected: %v\nResult: %v", expected, result)
 	}
 
 }
