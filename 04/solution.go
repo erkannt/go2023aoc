@@ -8,14 +8,15 @@ import (
 	"regexp"
 )
 
-func parseCard(card string) ([]string, []string) {
+func parseCard(card string) (string, []string, []string) {
 	sectionsRegex, _ := regexp.Compile("([0-9]+):([0-9 ]+)|([0-9 ]+)")
 	numberRegex, _ := regexp.Compile("[0-9]+")
 
 	sections := sectionsRegex.FindAllStringSubmatch(card, -1)
+	cardId := numberRegex.FindString(sections[0][0])
 	winningNumbers := numberRegex.FindAllString(sections[1][0], -1)
 	cardNumbers := numberRegex.FindAllString(sections[2][0], -1)
-	return winningNumbers, cardNumbers
+	return cardId, winningNumbers, cardNumbers
 }
 
 func cardValue(matchCount int) int {
@@ -33,7 +34,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 		if line == "" {
 			continue
 		}
-		winningNumbers, cardNumbers := parseCard(line)
+		_, winningNumbers, cardNumbers := parseCard(line)
 		var matches = []string{}
 		for _, cardNumber := range cardNumbers {
 			for _, winningNumber := range winningNumbers {

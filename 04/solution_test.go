@@ -46,12 +46,15 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
 func TestParseCard(t *testing.T) {
 
-	input := "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
+	input := "Card 42: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
 	expectedWinning := []string{"41", "48", "83", "86", "17"}
 	expectedCard := []string{"83", "86", "6", "31", "17", "9", "48", "53"}
 
-	winning, card := parseCard(input)
+	id, winning, card := parseCard(input)
 
+	if id != "42" {
+		t.Errorf("Winning\nExpected: %v\nResult: %v", 42, id)
+	}
 	if !reflect.DeepEqual(winning, expectedWinning) {
 		t.Errorf("Winning\nExpected: %v\nResult: %v", expectedWinning, winning)
 	}
