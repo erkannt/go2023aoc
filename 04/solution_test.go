@@ -52,7 +52,7 @@ func TestParseCard(t *testing.T) {
 
 	id, winning, card := parseCard(input)
 
-	if id != "42" {
+	if id != 42 {
 		t.Errorf("Winning\nExpected: %v\nResult: %v", 42, id)
 	}
 	if !reflect.DeepEqual(winning, expectedWinning) {

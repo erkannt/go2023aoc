@@ -6,16 +6,19 @@ import (
 	"math"
 	"os"
 	"regexp"
+	"strconv"
 )
 
-func parseCard(card string) (string, []string, []string) {
+func parseCard(card string) (int, []string, []string) {
 	sectionsRegex, _ := regexp.Compile("([0-9]+):([0-9 ]+)|([0-9 ]+)")
 	numberRegex, _ := regexp.Compile("[0-9]+")
 
 	sections := sectionsRegex.FindAllStringSubmatch(card, -1)
-	cardId := numberRegex.FindString(sections[0][0])
+	cardIdString := numberRegex.FindString(sections[0][0])
+	cardId, _ := strconv.Atoi(cardIdString)
 	winningNumbers := numberRegex.FindAllString(sections[1][0], -1)
 	cardNumbers := numberRegex.FindAllString(sections[2][0], -1)
+
 	return cardId, winningNumbers, cardNumbers
 }
 
