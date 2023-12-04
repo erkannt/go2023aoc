@@ -52,7 +52,31 @@ func ProblemOne(scanner bufio.Scanner) int {
 }
 
 func ProblemTwo(scanner bufio.Scanner) int {
-	return 0
+	cardCounts := make(map[int]int)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		id, winningNumbers, cardNumbers := parseCard(line)
+		cardCounts[id] += 1
+		var matches = []string{}
+		for _, cardNumber := range cardNumbers {
+			for _, winningNumber := range winningNumbers {
+				if cardNumber == winningNumber {
+					matches = append(matches, cardNumber)
+				}
+			}
+		}
+		for i := 0; i <= len(matches); i++ {
+			cardCounts[id+i] += cardCounts[id]
+		}
+	}
+	var total = 0
+	for _, count := range cardCounts {
+		total += count
+	}
+	return total
 }
 
 func main() {
