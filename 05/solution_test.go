@@ -8,17 +8,17 @@ import (
 
 type Seed int
 
-type SeedMap struct {
+type SeedMapping struct {
 	destinationStart int
 	sourceStart      int
 	rangeLength      int
 }
 
-func parseAlmanac(scanner bufio.Scanner) ([]Seed, []SeedMap) {
-	return []Seed{0}, []SeedMap{}
+func parseAlmanac(scanner bufio.Scanner) ([]Seed, [][]SeedMapping) {
+	return []Seed{0}, [][]SeedMapping{}
 }
 
-func lookupLocation(seed Seed, maps []SeedMap) int {
+func lookupLocation(seed Seed, maps [][]SeedMapping) int {
 	return 0
 }
 
