@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -67,9 +66,10 @@ func lookupLocation(seed Seed, maps [][]SeedMapping) int {
 	var result = seed
 	for _, seedMap := range maps {
 		for _, mapping := range seedMap {
-			if result >= mapping.sourceStart && seed <= mapping.sourceStart+mapping.rangeLength {
-				delta := result - mapping.sourceStart - 1
+			if result >= mapping.sourceStart && result <= mapping.sourceStart+mapping.rangeLength {
+				delta := result - mapping.sourceStart
 				result = mapping.destinationStart + delta
+				break
 			}
 		}
 	}
@@ -81,7 +81,6 @@ func ProblemOne(scanner bufio.Scanner) int {
 	var nearestLocation = lookupLocation(seeds[0], maps)
 	for _, seed := range seeds {
 		location := lookupLocation(seed, maps)
-		fmt.Println(seed, location)
 		if location < nearestLocation {
 			nearestLocation = location
 		}
