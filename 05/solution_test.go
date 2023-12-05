@@ -3,80 +3,10 @@ package main
 import (
 	"bufio"
 	"reflect"
-	"regexp"
-	"strconv"
 	"strings"
 	"testing"
 )
 
-type Seed int
-
-type SeedMapping struct {
-	destinationStart int
-	sourceStart      int
-	rangeLength      int
-}
-
-func parseAlmanac(scanner bufio.Scanner) ([]Seed, [][]SeedMapping) {
-	numberRegex, _ := regexp.Compile("[0-9]+")
-	seeds := []Seed{}
-	allMaps := [][]SeedMapping{}
-	currentMap := []SeedMapping{}
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line == "" {
-			continue
-		}
-
-		if strings.Contains(line, "seeds: ") {
-			seedStrings := numberRegex.FindAllString(line, -1)
-			for _, str := range seedStrings {
-				value, _ := strconv.Atoi(str)
-				seeds = append(seeds, Seed(value))
-			}
-			continue
-		}
-
-		if strings.Contains(line, "map:") && len(currentMap) != 0 {
-			allMaps = append(allMaps, currentMap)
-			currentMap = []SeedMapping{}
-			continue
-		}
-
-		numberStrings := numberRegex.FindAllString(line, -1)
-		if len(numberStrings) == 3 {
-			numbers := []int{}
-			for _, str := range numberStrings {
-				value, _ := strconv.Atoi(str)
-				numbers = append(numbers, value)
-			}
-			currentMap = append(currentMap, SeedMapping{
-				destinationStart: numbers[0],
-				sourceStart:      numbers[1],
-				rangeLength:      numbers[2],
-			})
-		}
-	}
-	allMaps = append(allMaps, currentMap)
-
-	return seeds, allMaps
-}
-
-func lookupLocation(seed Seed, maps [][]SeedMapping) int {
-	return 0
-}
-
-func ProblemOne(scanner bufio.Scanner) int {
-	seeds, maps := parseAlmanac(scanner)
-	var nearestLocation = lookupLocation(seeds[0], maps)
-	for _, seed := range seeds {
-		location := lookupLocation(seed, maps)
-		if location < nearestLocation {
-			nearestLocation = location
-		}
-	}
-	return nearestLocation
-}
 func TestParseAlmanacSeeds(t *testing.T) {
 	input := `
 seeds: 79 14 55 13
