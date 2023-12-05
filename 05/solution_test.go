@@ -20,6 +20,8 @@ type SeedMapping struct {
 func parseAlmanac(scanner bufio.Scanner) ([]Seed, [][]SeedMapping) {
 	numberRegex, _ := regexp.Compile("[0-9]+")
 	seeds := []Seed{}
+	allMaps := [][]SeedMapping{}
+	currentMap := []SeedMapping{}
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
@@ -32,10 +34,32 @@ func parseAlmanac(scanner bufio.Scanner) ([]Seed, [][]SeedMapping) {
 				value, _ := strconv.Atoi(str)
 				seeds = append(seeds, Seed(value))
 			}
+			continue
+		}
 
+		if strings.Contains(line, "map:") && len(currentMap) != 0 {
+			allMaps = append(allMaps, currentMap)
+			currentMap = []SeedMapping{}
+			continue
+		}
+
+		numberStrings := numberRegex.FindAllString(line, -1)
+		if len(numberStrings) == 3 {
+			numbers := []int{}
+			for _, str := range numberStrings {
+				value, _ := strconv.Atoi(str)
+				numbers = append(numbers, value)
+			}
+			currentMap = append(currentMap, SeedMapping{
+				destinationStart: numbers[0],
+				sourceStart:      numbers[1],
+				rangeLength:      numbers[2],
+			})
 		}
 	}
-	return seeds, [][]SeedMapping{}
+	allMaps = append(allMaps, currentMap)
+
+	return seeds, allMaps
 }
 
 func lookupLocation(seed Seed, maps [][]SeedMapping) int {
