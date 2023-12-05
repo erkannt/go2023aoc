@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -32,6 +33,26 @@ func ProblemOne(scanner bufio.Scanner) int {
 		}
 	}
 	return nearestLocation
+}
+func TestParseAlmanacSeeds(t *testing.T) {
+	input := `
+seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+`
+	expected := []Seed{79, 14, 55, 13}
+
+	result, _ := parseAlmanac(*bufio.NewScanner(strings.NewReader(input)))
+	if !reflect.DeepEqual(expected, result) {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
 }
 
 func TestProblemOne(t *testing.T) {
