@@ -74,6 +74,57 @@ soil-to-fertilizer map:
 	}
 }
 
+func TestParseAlmanacMaps(t *testing.T) {
+	input := `
+seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+`
+	expected := [][]SeedMapping{
+		{
+			SeedMapping{
+				destinationStart: 50,
+				sourceStart:      98,
+				rangeLength:      2,
+			},
+			SeedMapping{
+				destinationStart: 52,
+				sourceStart:      50,
+				rangeLength:      48,
+			},
+		},
+		{
+			SeedMapping{
+				destinationStart: 0,
+				sourceStart:      15,
+				rangeLength:      37,
+			},
+			SeedMapping{
+				destinationStart: 37,
+				sourceStart:      52,
+				rangeLength:      2,
+			},
+			SeedMapping{
+				destinationStart: 39,
+				sourceStart:      0,
+				rangeLength:      15,
+			},
+		},
+	}
+
+	_, result := parseAlmanac(*bufio.NewScanner(strings.NewReader(input)))
+	if !reflect.DeepEqual(expected, result) {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
+}
+
 func TestProblemOne(t *testing.T) {
 	input := `
 seeds: 79 14 55 13
