@@ -6,8 +6,32 @@ import (
 	"testing"
 )
 
-func ProblemOne(scanner bufio.Scanner) int {
+type Seed int
+
+type SeedMap struct {
+	destinationStart int
+	sourceStart      int
+	rangeLength      int
+}
+
+func parseAlmanac(scanner bufio.Scanner) ([]Seed, []SeedMap) {
+	return []Seed{0}, []SeedMap{}
+}
+
+func lookupLocation(seed Seed, maps []SeedMap) int {
 	return 0
+}
+
+func ProblemOne(scanner bufio.Scanner) int {
+	seeds, maps := parseAlmanac(scanner)
+	var nearestLocation = lookupLocation(seeds[0], maps)
+	for _, seed := range seeds {
+		location := lookupLocation(seed, maps)
+		if location < nearestLocation {
+			nearestLocation = location
+		}
+	}
+	return nearestLocation
 }
 
 func TestProblemOne(t *testing.T) {
