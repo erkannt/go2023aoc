@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"reflect"
+	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -16,7 +18,24 @@ type SeedMapping struct {
 }
 
 func parseAlmanac(scanner bufio.Scanner) ([]Seed, [][]SeedMapping) {
-	return []Seed{0}, [][]SeedMapping{}
+	numberRegex, _ := regexp.Compile("[0-9]+")
+	seeds := []Seed{}
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+
+		if strings.Contains(line, "seeds: ") {
+			seedStrings := numberRegex.FindAllString(line, -1)
+			for _, str := range seedStrings {
+				value, _ := strconv.Atoi(str)
+				seeds = append(seeds, Seed(value))
+			}
+
+		}
+	}
+	return seeds, [][]SeedMapping{}
 }
 
 func lookupLocation(seed Seed, maps [][]SeedMapping) int {
