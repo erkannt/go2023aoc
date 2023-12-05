@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -91,18 +90,14 @@ func ProblemOne(scanner bufio.Scanner) int {
 
 func ProblemTwo(scanner bufio.Scanner) int {
 	seedsInfo, maps := parseAlmanac(scanner)
-	seeds := []int{}
+	var nearestLocation = lookupLocation(seedsInfo[0], maps)
 	for i := 0; i < len(seedsInfo); i += 2 {
 		for j := 0; j < seedsInfo[i+1]; j++ {
-			seeds = append(seeds, seedsInfo[i]+j)
-		}
-	}
-	fmt.Printf("%v %v", len(seeds), seeds)
-	var nearestLocation = lookupLocation(seeds[0], maps)
-	for _, seed := range seeds {
-		location := lookupLocation(seed, maps)
-		if location < nearestLocation {
-			nearestLocation = location
+			seed := seedsInfo[i] + j
+			location := lookupLocation(seed, maps)
+			if location < nearestLocation {
+				nearestLocation = location
+			}
 		}
 	}
 	return nearestLocation
@@ -116,4 +111,7 @@ func main() {
 	defer file.Close()
 
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
+
+	file.Seek(0, 0)
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }
