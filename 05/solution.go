@@ -88,6 +88,18 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return nearestLocation
 }
 
+func ProblemTwo(scanner bufio.Scanner) int {
+	seeds, maps := parseAlmanac(scanner)
+	var nearestLocation = lookupLocation(seeds[0], maps)
+	for _, seed := range seeds {
+		location := lookupLocation(seed, maps)
+		if location < nearestLocation {
+			nearestLocation = location
+		}
+	}
+	return nearestLocation
+}
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {

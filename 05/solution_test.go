@@ -79,8 +79,7 @@ soil-to-fertilizer map:
 	}
 }
 
-func TestProblemOne(t *testing.T) {
-	input := `
+var problemInput = `
 seeds: 79 14 55 13
 
 seed-to-soil map:
@@ -115,9 +114,19 @@ humidity-to-location map:
 60 56 37
 56 93 4
 `
+
+func TestProblemOne(t *testing.T) {
 	expected := 35
 
-	result := ProblemOne(*bufio.NewScanner(strings.NewReader(input)))
+	result := ProblemOne(*bufio.NewScanner(strings.NewReader(problemInput)))
+	if result != expected {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
+}
+func TestProblemTwo(t *testing.T) {
+	expected := 46
+
+	result := ProblemTwo(*bufio.NewScanner(strings.NewReader(problemInput)))
 	if result != expected {
 		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
 	}
