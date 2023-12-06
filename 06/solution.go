@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -39,6 +38,26 @@ func parseRaces(scanner bufio.Scanner) []Race {
 	return races
 }
 
+func parseRacesIgnoringBadKerning(scanner bufio.Scanner) Race {
+	numberRegex, _ := regexp.Compile("[0-9]+")
+	race := Race{}
+	for scanner.Scan() {
+		line := scanner.Text()
+		line = strings.ReplaceAll(line, " ", "")
+		if strings.HasPrefix(line, "Time:") {
+			number := numberRegex.FindString(line)
+			value, _ := strconv.Atoi(number)
+			race.duration = value
+		}
+		if strings.HasPrefix(line, "Distance:") {
+			number := numberRegex.FindString(line)
+			value, _ := strconv.Atoi(number)
+			race.record = value
+		}
+	}
+	return race
+}
+
 func optimiseForRace(race Race) (int, int) {
 	durationSquared := math.Pow(float64(race.duration), 2)
 	minButton := math.Floor(float64(race.duration)/2 - math.Sqrt(durationSquared/4-float64(race.record)))
@@ -51,21 +70,15 @@ func ProblemOne(scanner bufio.Scanner) int {
 	races := parseRaces(scanner)
 	for _, race := range races {
 		minButton, maxButton := optimiseForRace(race)
-		fmt.Printf("%v %v %v\n", race, minButton, maxButton)
 		total *= maxButton - minButton
 	}
 	return total
 }
 
 func ProblemTwo(scanner bufio.Scanner) int {
-	total := 1
-	races := parseRaces(scanner)
-	for _, race := range races {
-		minButton, maxButton := optimiseForRace(race)
-		fmt.Printf("%v %v %v\n", race, minButton, maxButton)
-		total *= maxButton - minButton
-	}
-	return total
+	race := parseRacesIgnoringBadKerning(scanner)
+	minButton, maxButton := optimiseForRace(race)
+	return maxButton - minButton
 }
 
 func main() {
