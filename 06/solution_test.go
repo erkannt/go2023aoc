@@ -19,3 +19,11 @@ func TestProblemOne(t *testing.T) {
 		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
 	}
 }
+func TestProblemTwo(t *testing.T) {
+	expected := 71503
+
+	result := ProblemTwo(*bufio.NewScanner(strings.NewReader(problemInput)))
+	if result != expected {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
+}

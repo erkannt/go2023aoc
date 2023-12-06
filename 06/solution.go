@@ -57,6 +57,17 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return total
 }
 
+func ProblemTwo(scanner bufio.Scanner) int {
+	total := 1
+	races := parseRaces(scanner)
+	for _, race := range races {
+		minButton, maxButton := optimiseForRace(race)
+		fmt.Printf("%v %v %v\n", race, minButton, maxButton)
+		total *= maxButton - minButton
+	}
+	return total
+}
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {
@@ -65,4 +76,7 @@ func main() {
 	defer file.Close()
 
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
+
+	file.Seek(0, 0)
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }
