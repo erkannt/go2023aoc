@@ -11,8 +11,27 @@ Time:      7  15   30
 Distance:  9  40  200
 `
 
+type Race struct {
+	duration int
+	record   int
+}
+
+func parseRaces(scanner bufio.Scanner) []Race {
+	return []Race{}
+}
+
+func optimiseForRace(race Race) (int, int) {
+	return 0, 0
+}
+
 func ProblemOne(scanner bufio.Scanner) int {
-	return 0
+	total := 0
+	races := parseRaces(scanner)
+	for _, race := range races {
+		minButton, maxButton := optimiseForRace(race)
+		total *= maxButton - minButton
+	}
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
