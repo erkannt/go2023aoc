@@ -100,7 +100,7 @@ func (a ByRank) Less(i, j int) bool {
 	}
 }
 
-func ProblemOne(scanner bufio.Scanner) int {
+func parseHands(scanner bufio.Scanner) []Hand {
 	handRegex, _ := regexp.Compile("([AKQJT98765432]{5}) ([0-9]+)")
 	hands := []Hand{}
 	for scanner.Scan() {
@@ -116,12 +116,21 @@ func ProblemOne(scanner bufio.Scanner) int {
 			bid:   value,
 		})
 	}
-	sort.Sort(ByRank(hands))
+	return hands
+}
+
+func tally(hands []Hand) int {
 	total := 0
 	for i, hand := range hands {
 		total += hand.bid * (i + 1)
 	}
 	return total
+}
+
+func ProblemOne(scanner bufio.Scanner) int {
+	hands := parseHands(scanner)
+	sort.Sort(ByRank(hands))
+	return tally(hands)
 }
 
 func main() {
