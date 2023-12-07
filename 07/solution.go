@@ -73,6 +73,8 @@ func getTypeWithJoker(cards string) CardsType {
 		return FiveOfAKind
 	case reflect.DeepEqual(counts, []int{4, 1}):
 		switch uniqueCards['J'] {
+		case 4:
+			return FiveOfAKind
 		case 1:
 			return FiveOfAKind
 		default:
