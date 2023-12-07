@@ -86,20 +86,18 @@ type ByRank []Hand
 func (a ByRank) Len() int      { return len(a) }
 func (a ByRank) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a ByRank) Less(i, j int) bool {
-	cardsA := a[i].cards
-	cardsB := a[j].cards
-	cardsTypeA := getType(cardsA)
-	cardsTypeB := getType(cardsB)
-	if cardsTypeA > cardsTypeB {
+	cardsI := a[i].cards
+	cardsJ := a[j].cards
+	cardsTypeI := getType(cardsI)
+	cardsTypeJ := getType(cardsJ)
+	switch {
+	case cardsTypeI < cardsTypeJ:
+		return true
+	case cardsTypeI > cardsTypeJ:
 		return false
+	default:
+		return firstDifferentCardIsLower(cardsI, cardsJ)
 	}
-	if cardsTypeA < cardsTypeB {
-		return true
-	}
-	if firstDifferentCardIsLower(a[i].cards, a[j].cards) {
-		return true
-	}
-	return false
 }
 
 func ProblemOne(scanner bufio.Scanner) int {
