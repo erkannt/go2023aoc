@@ -45,10 +45,28 @@ func TestProblemOne(t *testing.T) {
 	}
 }
 
+func TestProblemTwo(t *testing.T) {
+	expected := 5905
+
+	result := ProblemTwo(*bufio.NewScanner(strings.NewReader(problemInput)))
+	if result != expected {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
+}
+
 func TestProblemOneReddit(t *testing.T) {
 	expected := 6592
 
 	result := ProblemOne(*bufio.NewScanner(strings.NewReader(problemInputReddit)))
+	if result != expected {
+		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
+	}
+}
+
+func TestProblemTwoReddit(t *testing.T) {
+	expected := 6839
+
+	result := ProblemTwo(*bufio.NewScanner(strings.NewReader(problemInputReddit)))
 	if result != expected {
 		t.Errorf("\n Expected: %v\nResult: %v", expected, result)
 	}
