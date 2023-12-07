@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"reflect"
 	"regexp"
 	"slices"
@@ -63,6 +62,7 @@ func getType(cards string) CardsType {
 		counts = append(counts, v)
 	}
 	slices.Sort(counts)
+	slices.Reverse(counts)
 	switch {
 	case reflect.DeepEqual(counts, []int{5}):
 		return FiveOfAKind
@@ -73,17 +73,18 @@ func getType(cards string) CardsType {
 	case reflect.DeepEqual(counts, []int{3, 1, 1}):
 		return ThreeOfAKind
 	case reflect.DeepEqual(counts, []int{2, 2, 1}):
-		return ThreeOfAKind
-	case reflect.DeepEqual(counts, []int{2, 1, 1, 1}):
 		return TwoPair
+	case reflect.DeepEqual(counts, []int{2, 1, 1, 1}):
+		return OnePair
 	default:
 		return HighCard
 	}
 }
 
 func cardValue(input byte) int {
-	for i, card := range cardsByValue {
-		if card == string(input) {
+	cardsByValue := "23456789TJQKA"
+	for i := 0; i < len(cardsByValue); i++ {
+		if cardsByValue[i] == input {
 			return i
 		}
 	}
@@ -92,7 +93,12 @@ func cardValue(input byte) int {
 
 func firstDifferentCardIsLower(cardsA, cardsB string) bool {
 	for i := 0; i <= 4; i++ {
-		if cardValue(cardsA[i]) < cardValue(cardsB[i]) {
+		valueA := cardValue(cardsA[i])
+		valueB := cardValue(cardsB[i])
+		if valueA > valueB {
+			return false
+		}
+		if valueA < valueB {
 			return true
 		}
 	}
@@ -128,9 +134,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 			bid:   value,
 		})
 	}
-	fmt.Printf("%+v\n", hands)
 	sort.Sort(ByRank(hands))
-	fmt.Printf("%+v\n", hands)
 	total := 0
 	for i, hand := range hands {
 		total += hand.bid * (i + 1)
