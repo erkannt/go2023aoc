@@ -36,22 +36,6 @@ const (
 	FiveOfAKind
 )
 
-var cardsByValue = []string{
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"T",
-	"J",
-	"Q",
-	"K",
-	"A",
-}
-
 func getType(cards string) CardsType {
 	uniqueCards := map[rune]int{}
 	for _, v := range cards {
