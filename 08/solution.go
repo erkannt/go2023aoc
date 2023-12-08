@@ -10,7 +10,7 @@ import (
 
 type Node map[rune]string
 
-func ProblemOne(scanner bufio.Scanner) int {
+func parseInput(scanner bufio.Scanner) ([]rune, map[string]Node) {
 	instructions := []rune{}
 	network := make(map[string]Node)
 	nodeRegex := regexp.MustCompile("([A-Z]{3}).*([A-Z]{3}), ([A-Z]{3})")
@@ -29,6 +29,11 @@ func ProblemOne(scanner bufio.Scanner) int {
 		}
 		instructions = []rune(line)
 	}
+	return instructions, network
+}
+
+func ProblemOne(scanner bufio.Scanner) int {
+	instructions, network := parseInput(scanner)
 	step := 0
 	current := "AAA"
 	for {
