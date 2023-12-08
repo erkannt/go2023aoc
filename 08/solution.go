@@ -48,6 +48,27 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return step + 1
 }
 
+// greatest common divisor (GCD) via Euclidean algorithm
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+// find Least Common Multiple (LCM) via GCD
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
+}
+
 func ProblemTwo(scanner bufio.Scanner) int {
 	instructions, network := parseInput(scanner)
 	current := []string{}
@@ -58,22 +79,22 @@ func ProblemTwo(scanner bufio.Scanner) int {
 	}
 	fmt.Printf("%v\n", current)
 
-	step := 0
-	for {
-		instr := instructions[step%len(instructions)]
-		for i, node := range current {
-			current[i] = network[node][instr]
+	steps := []int{}
+
+	for _, node := range current {
+		step := 0
+		for {
+			instr := instructions[step%len(instructions)]
+			node = network[node][instr]
+			if strings.HasSuffix(node, "Z") {
+				steps = append(steps, step+1)
+				break
+			}
+			step++
 		}
-		reachedEnd := true
-		for _, node := range current {
-			reachedEnd = reachedEnd && strings.HasSuffix(node, "Z")
-		}
-		if reachedEnd {
-			break
-		}
-		step++
 	}
-	return step + 1
+	fmt.Printf("%v\n", steps)
+	return LCM(steps[0], steps[1], steps...)
 }
 
 func main() {
