@@ -47,6 +47,11 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return step + 1
 }
 
+func ProblemTwo(scanner bufio.Scanner) int {
+	step := 0
+	return step + 1
+}
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {
