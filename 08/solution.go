@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -13,7 +14,7 @@ type Node map[rune]string
 func parseInput(scanner bufio.Scanner) ([]rune, map[string]Node) {
 	instructions := []rune{}
 	network := make(map[string]Node)
-	nodeRegex := regexp.MustCompile("([A-Z]{3}).*([A-Z]{3}), ([A-Z]{3})")
+	nodeRegex := regexp.MustCompile("([A-Z0-9]{3}).*([A-Z0-9]{3}), ([A-Z0-9]{3})")
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
@@ -48,7 +49,30 @@ func ProblemOne(scanner bufio.Scanner) int {
 }
 
 func ProblemTwo(scanner bufio.Scanner) int {
+	instructions, network := parseInput(scanner)
+	current := []string{}
+	for k := range network {
+		if strings.HasSuffix(k, "A") {
+			current = append(current, k)
+		}
+	}
+	fmt.Printf("%v\n", current)
+
 	step := 0
+	for {
+		instr := instructions[step%len(instructions)]
+		for i, node := range current {
+			current[i] = network[node][instr]
+		}
+		reachedEnd := true
+		for _, node := range current {
+			reachedEnd = reachedEnd && strings.HasSuffix(node, "Z")
+		}
+		if reachedEnd {
+			break
+		}
+		step++
+	}
 	return step + 1
 }
 
@@ -60,4 +84,6 @@ func main() {
 	defer file.Close()
 
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
+	file.Seek(0, 0)
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }
