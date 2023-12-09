@@ -36,7 +36,7 @@ func isAllZero(input []int) bool {
 	return true
 }
 
-func nextValue(history []int) int {
+func buildDeltas(history []int) [][]int {
 	data := [][]int{}
 	data = append(data, history)
 	deltaCount := 0
@@ -51,9 +51,23 @@ func nextValue(history []int) int {
 			break
 		}
 	}
+	return data
+}
+
+func nextValue(history []int) int {
+	data := buildDeltas(history)
 	predictionDelta := 0
-	for i := deltaCount - 1; i >= 0; i-- {
+	for i := len(data) - 1; i >= 0; i-- {
 		predictionDelta = data[i][len(data[i])-1] + predictionDelta
+	}
+	return predictionDelta
+}
+
+func prevValue(history []int) int {
+	data := buildDeltas(history)
+	predictionDelta := 0
+	for i := len(data) - 1; i >= 0; i-- {
+		predictionDelta = data[i][0] - predictionDelta
 	}
 	return predictionDelta
 }
@@ -67,6 +81,15 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return total
 }
 
+func ProblemTwo(scanner bufio.Scanner) int {
+	histories := parseHistories(scanner)
+	total := 0
+	for _, history := range histories {
+		total += prevValue(history)
+	}
+	return total
+}
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {
@@ -75,6 +98,6 @@ func main() {
 	defer file.Close()
 
 	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
-	// file.Seek(0, 0)
-	// println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
+	file.Seek(0, 0)
+	println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
 }
