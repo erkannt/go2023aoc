@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,16 +22,48 @@ func parseHistories(scanner bufio.Scanner) [][]int {
 			value, _ := strconv.Atoi(str)
 			numbers = append(numbers, value)
 		}
-		fmt.Printf("%v\n", numbers)
 		histories = append(histories, numbers)
 	}
 	return histories
 }
 
+func sum(input []int) int {
+	total := 0
+	for _, v := range input {
+		total += v
+	}
+	return total
+}
+
+func nextValue(history []int) int {
+	data := [][]int{}
+	data = append(data, history)
+	deltaCount := 0
+	for {
+		currentDeltas := []int{}
+		for i := 1; i < len(data[deltaCount]); i++ {
+			currentDeltas = append(currentDeltas, data[deltaCount][i]-data[deltaCount][i-1])
+		}
+		data = append(data, currentDeltas)
+		deltaCount++
+		if sum(currentDeltas) == 0 {
+			break
+		}
+	}
+	predictionDelta := 0
+	for i := deltaCount - 1; i >= 0; i-- {
+		predictionDelta = data[i][len(data[i])-1] + predictionDelta
+	}
+	return predictionDelta
+}
+
 func ProblemOne(scanner bufio.Scanner) int {
 	histories := parseHistories(scanner)
-	fmt.Printf("%v\n", histories)
-	return 0
+	total := 0
+	for _, history := range histories {
+		total += nextValue(history)
+	}
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
