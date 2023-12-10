@@ -45,36 +45,43 @@ func findFirstStep(mapLines [][]rune, startPos Position) Step {
 	return Step{}
 }
 
-func getNextStep(prevStep Step, pipeshape rune) Step {
-	log.Printf("%v %v\n", prevStep, string(pipeshape))
+type Turn = int
+
+const (
+	NoTurn           Turn = 0
+	Clockwise        Turn = 1
+	Counterclockwise Turn = -1
+)
+
+func getNextStep(prevStep Step, pipeshape rune) (Step, Turn) {
 	switch pipeshape {
 	case '|':
-		return Step{x: 0, y: prevStep.y}
+		return Step{x: 0, y: prevStep.y}, NoTurn
 	case '-':
-		return Step{x: prevStep.x, y: 0}
+		return Step{x: prevStep.x, y: 0}, NoTurn
 	case 'L':
 		if prevStep.y == 1 {
-			return Step{x: 1, y: 0}
+			return Step{x: 1, y: 0}, Counterclockwise
 		}
-		return Step{x: 0, y: -1}
+		return Step{x: 0, y: -1}, Clockwise
 	case 'J':
 		if prevStep.y == 1 {
-			return Step{x: -1, y: 0}
+			return Step{x: -1, y: 0}, Clockwise
 		}
-		return Step{x: 0, y: -1}
+		return Step{x: 0, y: -1}, Counterclockwise
 	case '7':
 		if prevStep.y == -1 {
-			return Step{x: -1, y: 0}
+			return Step{x: -1, y: 0}, Counterclockwise
 		}
-		return Step{x: 0, y: 1}
+		return Step{x: 0, y: 1}, Clockwise
 	case 'F':
 		if prevStep.y == -1 {
-			return Step{x: 1, y: 0}
+			return Step{x: 1, y: 0}, Clockwise
 		}
-		return Step{x: 0, y: 1}
+		return Step{x: 0, y: 1}, Counterclockwise
 	}
 	log.Fatal("Invalid pipeshape")
-	return Step{}
+	return Step{}, NoTurn
 }
 
 func getPipeShape(pos Position, maplines [][]rune) rune {
@@ -93,18 +100,86 @@ func ProblemOne(scanner bufio.Scanner) int {
 	for {
 		currentPos.x += step.x
 		currentPos.y += step.y
-		fmt.Printf("%v  ", currentPos)
 		if currentPos.x == startPos.x && currentPos.y == startPos.y {
 			break
 		}
-		step = getNextStep(step, getPipeShape(currentPos, mapLines))
+		step, _ = getNextStep(step, getPipeShape(currentPos, mapLines))
 		pipeLength++
 	}
 	return pipeLength/2 + 1
 }
 
+func getInsideNeighbour(clockwise bool, prevStep Step, pos Position, shape rune) Position {
+	switch {
+	case shape == '|' && clockwise && prevStep.y == -1:
+		return Position{x: pos.x + 1, y: pos.y}
+	case shape == '|' && !clockwise && prevStep.y == -1:
+		return Position{x: pos.x - 1, y: pos.y}
+	case shape == '|' && clockwise && prevStep.y == 1:
+		return Position{x: pos.x - 1, y: pos.y}
+	case shape == '|' && !clockwise && prevStep.y == 1:
+		return Position{x: pos.x + 1, y: pos.y}
+	case shape == '-' && clockwise && prevStep.x == -1:
+		return Position{x: pos.x, y: pos.y - 1}
+	case shape == '-' && !clockwise && prevStep.x == -1:
+		return Position{x: pos.x, y: pos.y - 1}
+	case shape == '-' && clockwise && prevStep.x == 1:
+		return Position{x: pos.x, y: pos.y + 1}
+	case shape == '-' && !clockwise && prevStep.x == 1:
+		return Position{x: pos.x, y: pos.y - 1}
+	}
+	log.Fatalf("Invalid case: %v %v %v %v", clockwise, prevStep, pos, string(shape))
+	return Position{}
+}
+
 func ProblemTwo(scanner bufio.Scanner) int {
-	return 0
+	mapLines := [][]rune{}
+	for scanner.Scan() {
+		mapLines = append(mapLines, []rune(scanner.Text()))
+	}
+	pipeLength := 0
+	currentPos := findStart(mapLines)
+	step := findFirstStep(mapLines, currentPos)
+	netTurns := 0
+	pipeParts := make(map[string]bool)
+
+	for {
+		pipeParts[fmt.Sprintf("%d;%d", currentPos.x, currentPos.y)] = true
+
+		currentPos.x += step.x
+		currentPos.y += step.y
+		shape := getPipeShape(currentPos, mapLines)
+		if shape == 'S' {
+			break
+		}
+		nextStep, turn := getNextStep(step, shape)
+		step = nextStep
+		netTurns += turn
+		pipeLength++
+	}
+
+	clockwise := netTurns > 0
+
+	enclosedSpaces := []Position{}
+	currentPos = findStart(mapLines)
+	step = findFirstStep(mapLines, currentPos)
+	for {
+		currentPos.x += step.x
+		currentPos.y += step.y
+		shape := getPipeShape(currentPos, mapLines)
+		if shape == 'S' {
+			break
+		}
+		if shape == '|' || shape == '-' {
+			enclosedSpaces = append(enclosedSpaces, getInsideNeighbour(clockwise, step, currentPos, shape))
+		}
+		nextStep, _ := getNextStep(step, shape)
+		step = nextStep
+	}
+	enclosedSpaces = slices.Compact(enclosedSpaces)
+	fmt.Printf("%v\n", enclosedSpaces)
+
+	return len(enclosedSpaces)
 }
 
 func main() {
