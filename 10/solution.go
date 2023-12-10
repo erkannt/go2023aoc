@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"maps"
 	"os"
 	"slices"
 )
@@ -109,27 +110,44 @@ func ProblemOne(scanner bufio.Scanner) int {
 	return pipeLength/2 + 1
 }
 
-func getInsideNeighbour(clockwise bool, prevStep Step, pos Position, shape rune) Position {
+func getInsideNeighbour(clockwise bool, prevStep Step, pos Position, shape rune) []Position {
 	switch {
 	case shape == '|' && clockwise && prevStep.y == -1:
-		return Position{x: pos.x + 1, y: pos.y}
+		return []Position{{x: pos.x + 1, y: pos.y}}
 	case shape == '|' && !clockwise && prevStep.y == -1:
-		return Position{x: pos.x - 1, y: pos.y}
+		return []Position{{x: pos.x - 1, y: pos.y}}
 	case shape == '|' && clockwise && prevStep.y == 1:
-		return Position{x: pos.x - 1, y: pos.y}
+		return []Position{{x: pos.x - 1, y: pos.y}}
 	case shape == '|' && !clockwise && prevStep.y == 1:
-		return Position{x: pos.x + 1, y: pos.y}
+		return []Position{{x: pos.x + 1, y: pos.y}}
+
 	case shape == '-' && clockwise && prevStep.x == -1:
-		return Position{x: pos.x, y: pos.y - 1}
+		return []Position{{x: pos.x, y: pos.y - 1}}
 	case shape == '-' && !clockwise && prevStep.x == -1:
-		return Position{x: pos.x, y: pos.y - 1}
+		return []Position{{x: pos.x, y: pos.y + 1}}
 	case shape == '-' && clockwise && prevStep.x == 1:
-		return Position{x: pos.x, y: pos.y + 1}
+		return []Position{{x: pos.x, y: pos.y + 1}}
 	case shape == '-' && !clockwise && prevStep.x == 1:
-		return Position{x: pos.x, y: pos.y - 1}
+		return []Position{{x: pos.x, y: pos.y - 1}}
+
+	case shape == '7' && clockwise && prevStep.y == -1:
+		return []Position{{x: pos.x + 1, y: pos.y}, {x: pos.x, y: pos.y - 1}}
+	case shape == '7' && !clockwise && prevStep.y != -1:
+		return []Position{{x: pos.x + 1, y: pos.y}, {x: pos.x, y: pos.y - 1}}
+	case shape == 'J' && clockwise && prevStep.x == 1:
+		return []Position{{x: pos.x + 1, y: pos.y}, {x: pos.x, y: pos.y + 1}}
+	case shape == 'J' && !clockwise && prevStep.x != 1:
+		return []Position{{x: pos.x + 1, y: pos.y}, {x: pos.x, y: pos.y + 1}}
+	case shape == 'L' && clockwise && prevStep.y == 1:
+		return []Position{{x: pos.x - 1, y: pos.y}, {x: pos.x, y: pos.y + 1}}
+	case shape == 'L' && !clockwise && prevStep.y != 1:
+		return []Position{{x: pos.x - 1, y: pos.y}, {x: pos.x, y: pos.y + 1}}
+	case shape == 'F' && clockwise && prevStep.x == -1:
+		return []Position{{x: pos.x - 1, y: pos.y}, {x: pos.x, y: pos.y - 1}}
+	case shape == 'F' && !clockwise && prevStep.x != -1:
+		return []Position{{x: pos.x - 1, y: pos.y}, {x: pos.x, y: pos.y - 1}}
 	}
-	log.Fatalf("Invalid case: %v %v %v %v", clockwise, prevStep, pos, string(shape))
-	return Position{}
+	return []Position{}
 }
 
 func ProblemTwo(scanner bufio.Scanner) int {
@@ -141,11 +159,10 @@ func ProblemTwo(scanner bufio.Scanner) int {
 	currentPos := findStart(mapLines)
 	step := findFirstStep(mapLines, currentPos)
 	netTurns := 0
-	pipeParts := make(map[string]bool)
+	pipeParts := make(map[Position]bool)
 
 	for {
-		pipeParts[fmt.Sprintf("%d;%d", currentPos.x, currentPos.y)] = true
-
+		pipeParts[currentPos] = true
 		currentPos.x += step.x
 		currentPos.y += step.y
 		shape := getPipeShape(currentPos, mapLines)
@@ -160,7 +177,7 @@ func ProblemTwo(scanner bufio.Scanner) int {
 
 	clockwise := netTurns > 0
 
-	enclosedSpaces := []Position{}
+	enclosedSpaces := make(map[Position]bool)
 	currentPos = findStart(mapLines)
 	step = findFirstStep(mapLines, currentPos)
 	for {
@@ -170,14 +187,54 @@ func ProblemTwo(scanner bufio.Scanner) int {
 		if shape == 'S' {
 			break
 		}
-		if shape == '|' || shape == '-' {
-			enclosedSpaces = append(enclosedSpaces, getInsideNeighbour(clockwise, step, currentPos, shape))
+		innerNeighbours := getInsideNeighbour(clockwise, step, currentPos, shape)
+		for _, n := range innerNeighbours {
+			enclosedSpaces[n] = true
 		}
 		nextStep, _ := getNextStep(step, shape)
 		step = nextStep
 	}
-	enclosedSpaces = slices.Compact(enclosedSpaces)
-	fmt.Printf("%v\n", enclosedSpaces)
+
+	maps.DeleteFunc(enclosedSpaces, func(pos Position, _ bool) bool { return pipeParts[pos] })
+	for pos := range enclosedSpaces {
+		scanPos := pos
+		for {
+			scanPos.x++
+			if pipeParts[scanPos] {
+				break
+			}
+			enclosedSpaces[scanPos] = true
+		}
+	}
+
+	for y, line := range mapLines {
+		for x, v := range line {
+			switch {
+			case enclosedSpaces[Position{x: x, y: y}]:
+				fmt.Print("x")
+			case pipeParts[Position{x, y}]:
+				switch v {
+				case 'S':
+					fmt.Print("★")
+				case '|':
+					fmt.Print("║")
+				case '-':
+					fmt.Print("═")
+				case 'F':
+					fmt.Print("╔")
+				case '7':
+					fmt.Print("╗")
+				case 'J':
+					fmt.Print("╝")
+				case 'L':
+					fmt.Print("╚")
+				}
+			default:
+				fmt.Print(" ")
+			}
+		}
+		fmt.Print("\n")
+	}
 
 	return len(enclosedSpaces)
 }
