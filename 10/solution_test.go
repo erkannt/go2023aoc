@@ -54,8 +54,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 }
 
 func TestProblemOne(t *testing.T) {
-	input := `
-.....
+	input := `.....
 .S-7.
 .|.|.
 .L-J.
