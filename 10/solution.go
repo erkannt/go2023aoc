@@ -19,6 +19,14 @@ type Step struct {
 	y int
 }
 
+type Turn = int
+
+const (
+	NoTurn           Turn = 0
+	Clockwise        Turn = 1
+	Counterclockwise Turn = -1
+)
+
 func findStart(mapLines [][]rune) Position {
 	for y, line := range mapLines {
 		for x, r := range line {
@@ -45,14 +53,6 @@ func findFirstStep(mapLines [][]rune, startPos Position) Step {
 	log.Fatal("No valid first step found")
 	return Step{}
 }
-
-type Turn = int
-
-const (
-	NoTurn           Turn = 0
-	Clockwise        Turn = 1
-	Counterclockwise Turn = -1
-)
 
 func getNextStep(prevStep Step, pipeshape rune) (Step, Turn) {
 	switch pipeshape {
@@ -87,27 +87,6 @@ func getNextStep(prevStep Step, pipeshape rune) (Step, Turn) {
 
 func getPipeShape(pos Position, maplines [][]rune) rune {
 	return maplines[pos.y][pos.x]
-}
-
-func ProblemOne(scanner bufio.Scanner) int {
-	mapLines := [][]rune{}
-	for scanner.Scan() {
-		mapLines = append(mapLines, []rune(scanner.Text()))
-	}
-	pipeLength := 0
-	startPos := findStart(mapLines)
-	currentPos := findStart(mapLines)
-	step := findFirstStep(mapLines, currentPos)
-	for {
-		currentPos.x += step.x
-		currentPos.y += step.y
-		if currentPos.x == startPos.x && currentPos.y == startPos.y {
-			break
-		}
-		step, _ = getNextStep(step, getPipeShape(currentPos, mapLines))
-		pipeLength++
-	}
-	return pipeLength/2 + 1
 }
 
 func getInsideNeighbour(clockwise bool, prevStep Step, pos Position, shape rune) []Position {
@@ -150,17 +129,39 @@ func getInsideNeighbour(clockwise bool, prevStep Step, pos Position, shape rune)
 	return []Position{}
 }
 
-func ProblemTwo(scanner bufio.Scanner) int {
+func ProblemOne(scanner bufio.Scanner) int {
 	mapLines := [][]rune{}
 	for scanner.Scan() {
 		mapLines = append(mapLines, []rune(scanner.Text()))
 	}
 	pipeLength := 0
+	startPos := findStart(mapLines)
+	currentPos := findStart(mapLines)
+	step := findFirstStep(mapLines, currentPos)
+	for {
+		currentPos.x += step.x
+		currentPos.y += step.y
+		if currentPos.x == startPos.x && currentPos.y == startPos.y {
+			break
+		}
+		step, _ = getNextStep(step, getPipeShape(currentPos, mapLines))
+		pipeLength++
+	}
+	return pipeLength/2 + 1
+}
+
+func ProblemTwo(scanner bufio.Scanner) int {
+	mapLines := [][]rune{}
+	for scanner.Scan() {
+		mapLines = append(mapLines, []rune(scanner.Text()))
+	}
+
 	currentPos := findStart(mapLines)
 	step := findFirstStep(mapLines, currentPos)
 	netTurns := 0
 	pipeParts := make(map[Position]bool)
 
+	// Determine pipeparts and direction of traversal
 	for {
 		pipeParts[currentPos] = true
 		currentPos.x += step.x
@@ -172,11 +173,10 @@ func ProblemTwo(scanner bufio.Scanner) int {
 		nextStep, turn := getNextStep(step, shape)
 		step = nextStep
 		netTurns += turn
-		pipeLength++
 	}
-
 	clockwise := netTurns > 0
 
+	// Find inner neighbours of pipe
 	enclosedSpaces := make(map[Position]bool)
 	currentPos = findStart(mapLines)
 	step = findFirstStep(mapLines, currentPos)
@@ -194,8 +194,9 @@ func ProblemTwo(scanner bufio.Scanner) int {
 		nextStep, _ := getNextStep(step, shape)
 		step = nextStep
 	}
-
 	maps.DeleteFunc(enclosedSpaces, func(pos Position, _ bool) bool { return pipeParts[pos] })
+
+	// Fill enclosed areas
 	for pos := range enclosedSpaces {
 		scanPos := pos
 		for {
@@ -207,6 +208,7 @@ func ProblemTwo(scanner bufio.Scanner) int {
 		}
 	}
 
+	// Pretty print
 	for y, line := range mapLines {
 		for x, v := range line {
 			switch {
