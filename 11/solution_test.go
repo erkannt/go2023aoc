@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"slices"
 	"strings"
 	"testing"
@@ -63,11 +64,29 @@ func expandVertically(image Image) Image {
 }
 
 func findGalaxies(image Image) []Position {
-	return []Position{}
+	galaxies := []Position{}
+	for rowNo, row := range image {
+		for colNo, value := range row {
+			if value == '#' {
+				galaxies = append(galaxies, Position{x: colNo, y: rowNo})
+			}
+		}
+	}
+	return galaxies
 }
 
 func measureDistances(positions []Position) []int {
-	return []int{}
+	galaxyCount := len(positions)
+	distances := []int{}
+	for i := 0; i < galaxyCount; i++ {
+		for j := i + 1; j < galaxyCount; j++ {
+			galaxyA := positions[i]
+			galaxyB := positions[j]
+			dist := math.Abs(float64(galaxyA.x)-float64(galaxyB.x)) + math.Abs(float64(galaxyA.y)-float64(galaxyB.y))
+			distances = append(distances, int(dist))
+		}
+	}
+	return distances
 }
 
 func printImage(image Image) {
