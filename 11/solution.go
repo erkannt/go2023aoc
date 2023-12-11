@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -25,7 +24,7 @@ func parseImage(input string) Image {
 	return image
 }
 
-func expandHorizontally(image Image) Image {
+func findEmptyColumns(image Image) []int {
 	emptyColumns := []int{}
 	width := len(image[0])
 	height := len(image)
@@ -41,27 +40,17 @@ func expandHorizontally(image Image) Image {
 			emptyColumns = append(emptyColumns, col)
 		}
 	}
-	newImage := Image{}
-	for _, row := range image {
-		for i, col := range emptyColumns {
-			row = slices.Insert(row, col+i, '.')
-		}
-		newImage = append(newImage, row)
-	}
-	return newImage
+	return emptyColumns
 }
 
-func expandVertically(image Image) Image {
+func findEmptyRows(image Image) []int {
 	emptyLines := []int{}
 	for i, line := range image {
 		if !slices.Contains(line, '#') {
 			emptyLines = append(emptyLines, i)
 		}
 	}
-	for i, lineNo := range emptyLines {
-		image = slices.Insert(image, lineNo+i, image[lineNo+i])
-	}
-	return image
+	return emptyLines
 }
 
 func findGalaxies(image Image) []Position {
@@ -76,40 +65,49 @@ func findGalaxies(image Image) []Position {
 	return galaxies
 }
 
-func measureDistances(positions []Position) []int {
+func measureDistances(positions []Position, emptyRows []int, emptyColumns []int, expansionFactor int) []int {
 	galaxyCount := len(positions)
 	distances := []int{}
 	for i := 0; i < galaxyCount; i++ {
 		for j := i + 1; j < galaxyCount; j++ {
 			galaxyA := positions[i]
 			galaxyB := positions[j]
-			dist := math.Abs(float64(galaxyA.x)-float64(galaxyB.x)) + math.Abs(float64(galaxyA.y)-float64(galaxyB.y))
-			distances = append(distances, int(dist))
+			colDist := math.Abs(float64(galaxyB.x - galaxyA.x))
+			rowDist := galaxyB.y - galaxyA.y
+			expansion := 0
+			for _, row := range emptyRows {
+				if row > galaxyA.y && row < galaxyB.y {
+					expansion += expansionFactor - 1
+				}
+			}
+			for _, col := range emptyColumns {
+				switch galaxyA.x < galaxyB.x {
+				case true:
+					if col > galaxyA.x && col < galaxyB.x {
+						expansion += expansionFactor - 1
+					}
+				case false:
+					if col < galaxyA.x && col > galaxyB.x {
+						expansion += expansionFactor - 1
+					}
+				}
+			}
+			distances = append(distances, int(colDist)+rowDist+expansion)
 		}
 	}
 	return distances
 }
 
-func printImage(image Image) {
-	for _, v := range image {
-		for _, c := range v {
-			fmt.Printf("%v", string(c))
-		}
-		fmt.Printf("\n")
-	}
+func ProblemOne(input string) int {
+	return ProblemTwo(input, 2)
 }
 
-func ProblemOne(input string) int {
+func ProblemTwo(input string, expansion int) int {
 	image := parseImage(input)
-	image = expandVertically(image)
-	printImage(image)
-	println("After vertical expansion")
-	printImage(image)
-	image = expandHorizontally(image)
-	println("After horizontal expansion")
-	printImage(image)
+	emptyRows := findEmptyRows(image)
+	emptyColumns := findEmptyColumns(image)
 	galaxies := findGalaxies(image)
-	distances := measureDistances(galaxies)
+	distances := measureDistances(galaxies, emptyRows, emptyColumns, expansion)
 	total := 0
 	for _, d := range distances {
 		total += d
@@ -124,4 +122,5 @@ func main() {
 	}
 
 	println("Problem1:", ProblemOne(string(input)))
+	println("Problem2:", ProblemTwo(string(input), 1000000))
 }
