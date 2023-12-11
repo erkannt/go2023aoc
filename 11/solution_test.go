@@ -24,7 +24,29 @@ func parseImage(input string) Image {
 }
 
 func expandHorizontally(image Image) Image {
-	return image
+	emptyColumns := []int{}
+	width := len(image[0])
+	height := len(image)
+	for col := 0; col < width; col++ {
+		empty := true
+		for row := 0; row < height; row++ {
+			if image[row][col] == '#' {
+				empty = false
+				break
+			}
+		}
+		if empty {
+			emptyColumns = append(emptyColumns, col)
+		}
+	}
+	newImage := Image{}
+	for _, row := range image {
+		for i, col := range emptyColumns {
+			row = slices.Insert(row, col+i, '.')
+		}
+		newImage = append(newImage, row)
+	}
+	return newImage
 }
 
 func expandVertically(image Image) Image {
@@ -64,6 +86,8 @@ func ProblemOne(input string) int {
 	println("After vertical expansion")
 	printImage(image)
 	image = expandHorizontally(image)
+	println("After horizontal expansion")
+	printImage(image)
 	galaxies := findGalaxies(image)
 	distances := measureDistances(galaxies)
 	total := 0
