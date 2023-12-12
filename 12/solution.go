@@ -45,20 +45,26 @@ func getCandidates(record string, groupSizes []int) [][]int {
 	return candidates
 }
 
-func remainingGroupArrangements(record string, candidatePositions [][]int, sizes []int, startingPoint int) int {
-	if len(candidatePositions) == 1 {
+type remainingGroupArrangements struct {
+	record             string
+	candidatePositions [][]int
+	sizes              []int
+}
+
+func (r remainingGroupArrangements) calc(depth int, startingPoint int) int {
+	if len(r.candidatePositions[depth:]) == 1 {
 		possibleCount := 0
-		for _, pos := range candidatePositions[0] {
-			if pos >= startingPoint && !strings.ContainsRune(record[pos+sizes[0]:], '#') && !strings.ContainsRune(record[startingPoint:pos], '#') {
+		for _, pos := range r.candidatePositions[depth:][0] {
+			if pos >= startingPoint && !strings.ContainsRune(r.record[pos+r.sizes[depth:][0]:], '#') && !strings.ContainsRune(r.record[startingPoint:pos], '#') {
 				possibleCount++
 			}
 		}
 		return possibleCount
 	}
 	possibleCount := 0
-	for _, pos := range candidatePositions[0] {
-		if pos >= startingPoint && !strings.ContainsRune(record[startingPoint:pos], '#') {
-			possibleCount += remainingGroupArrangements(record, candidatePositions[1:], sizes[1:], sizes[0]+pos+1)
+	for _, pos := range r.candidatePositions[depth:][0] {
+		if pos >= startingPoint && !strings.ContainsRune(r.record[startingPoint:pos], '#') {
+			possibleCount += r.calc(depth+1, r.sizes[depth:][0]+pos+1)
 		}
 	}
 	return possibleCount
@@ -74,9 +80,13 @@ func PossibleArrangements(input string, unfold bool) int {
 		}
 		groupSizes = expanded
 	}
-	fmt.Printf("%v %v %v\n", input, record, len(groupSizes))
 	candidatePositions := getCandidates(record, groupSizes)
-	total := remainingGroupArrangements(record, candidatePositions, groupSizes, 0)
+	calculator := remainingGroupArrangements{
+		record:             record,
+		candidatePositions: candidatePositions,
+		sizes:              groupSizes,
+	}
+	total := calculator.calc(0, 0)
 	return total
 }
 
