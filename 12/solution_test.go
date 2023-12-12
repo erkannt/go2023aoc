@@ -26,13 +26,23 @@ func parse(input string) (string, []int) {
 func getCandidates(record string, groupSizes []int) [][]int {
 	candidates := [][]int{}
 	for _, size := range groupSizes {
-		regx, _ := regexp.Compile(fmt.Sprintf("[?.][#?]{%d}[?.]", size))
+		regx, _ := regexp.Compile(fmt.Sprintf("([?.][#?]{%d}[?.])", size))
 		padded := fmt.Sprintf(".%s.", record)
-		thisGroupsCandidates := regx.FindAllSubmatchIndex([]byte(padded), -1)
-		if thisGroupsCandidates == nil {
+		thisGroupsCandidates := []int{}
+		offset := 0
+		for {
+			fmt.Printf("%v %v\n", padded[offset:], offset)
+			pos := regx.FindStringIndex(padded[offset:])
+			if pos == nil {
+				break
+			}
+			thisGroupsCandidates = append(thisGroupsCandidates, pos[0]+offset)
+			offset += pos[0] + size
+		}
+		if len(thisGroupsCandidates) == 0 {
 			log.Fatalf("Can't find position for group: %v %v %v", record, groupSizes, size)
 		}
-		candidates = append(candidates, thisGroupsCandidates...)
+		candidates = append(candidates, thisGroupsCandidates)
 	}
 	return candidates
 }
