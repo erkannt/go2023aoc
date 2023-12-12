@@ -45,11 +45,11 @@ func getCandidates(record string, groupSizes []int) [][]int {
 	return candidates
 }
 
-func remainingGroupArrangements(candidatePositions [][]int, sizes []int, startingPoint int) int {
+func remainingGroupArrangements(record string, candidatePositions [][]int, sizes []int, startingPoint int) int {
 	if len(candidatePositions) == 1 {
 		possibleCount := 0
 		for _, pos := range candidatePositions[0] {
-			if pos >= startingPoint {
+			if pos >= startingPoint && !strings.ContainsRune(record[pos+sizes[0]:], '#') && !strings.ContainsRune(record[startingPoint:pos], '#') {
 				possibleCount++
 			}
 		}
@@ -57,8 +57,8 @@ func remainingGroupArrangements(candidatePositions [][]int, sizes []int, startin
 	}
 	possibleCount := 0
 	for _, pos := range candidatePositions[0] {
-		if pos >= startingPoint {
-			possibleCount += remainingGroupArrangements(candidatePositions[1:], sizes[1:], sizes[0]+pos+1)
+		if pos >= startingPoint && !strings.ContainsRune(record[startingPoint:pos], '#') {
+			possibleCount += remainingGroupArrangements(record, candidatePositions[1:], sizes[1:], sizes[0]+pos+1)
 		}
 	}
 	return possibleCount
@@ -67,7 +67,7 @@ func remainingGroupArrangements(candidatePositions [][]int, sizes []int, startin
 func PossibleArrangements(input string) int {
 	record, groupSizes := parse(input)
 	candidatePositions := getCandidates(record, groupSizes)
-	total := remainingGroupArrangements(candidatePositions, groupSizes, 0)
+	total := remainingGroupArrangements(record, candidatePositions, groupSizes, 0)
 	return total
 }
 
@@ -83,5 +83,5 @@ func main() {
 		total += PossibleArrangements(scanner.Text())
 	}
 
-	println("Problem1:", total)
+	println(total)
 }
