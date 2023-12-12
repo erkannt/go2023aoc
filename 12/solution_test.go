@@ -36,7 +36,7 @@ func getCandidates(record string, groupSizes []int) [][]int {
 				break
 			}
 			thisGroupsCandidates = append(thisGroupsCandidates, pos[0]+offset)
-			offset += pos[0] + size
+			offset += pos[0] + 1
 		}
 		if len(thisGroupsCandidates) == 0 {
 			log.Fatalf("Can't find position for group: %v %v %v", record, groupSizes, size)
@@ -68,6 +68,7 @@ func remainingGroupArrangements(candidatePositions [][]int, sizes []int, startin
 func PossibleArrangements(input string) int {
 	record, groupSizes := parse(input)
 	candidatePositions := getCandidates(record, groupSizes)
+	fmt.Printf("%v %v\n", input, candidatePositions)
 	total := remainingGroupArrangements(candidatePositions, groupSizes, 0)
 	return total
 }
