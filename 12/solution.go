@@ -67,7 +67,7 @@ func remainingGroupArrangements(record string, candidatePositions [][]int, sizes
 func PossibleArrangements(input string, unfold bool) int {
 	record, groupSizes := parse(input)
 	if unfold {
-		record = strings.Repeat(record, 5)
+		record = fmt.Sprintf("%s?%s?%s?%s?%s", record, record, record, record, record)
 		expanded := []int{}
 		for i := 0; i < 5; i++ {
 			expanded = append(expanded, groupSizes...)
