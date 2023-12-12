@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,9 +23,26 @@ func parse(input string) (string, []int) {
 	return parts[0], groups
 }
 
+func getCandidates(record string, groupSizes []int) [][]int {
+	candidates := [][]int{}
+	for _, size := range groupSizes {
+		regx, _ := regexp.Compile(fmt.Sprintf("[?.][#?]{%d}[?.]", size))
+		padded := fmt.Sprintf(".%s.", record)
+		thisGroupsCandidates := regx.FindAllSubmatchIndex([]byte(padded), -1)
+		if thisGroupsCandidates == nil {
+			log.Fatalf("Can't find position for group: %v %v %v", record, groupSizes, size)
+		}
+		candidates = append(candidates, thisGroupsCandidates...)
+	}
+	return candidates
+}
+
 func PossibleArrangements(input string) int {
-	record, groups := parse(input)
-	fmt.Printf("%v %v", record, groups)
+	record, groupSizes := parse(input)
+	candidatePositions := getCandidates(record, groupSizes)
+	for _, v := range candidatePositions {
+		fmt.Printf("%v\n", v)
+	}
 	return 0
 }
 
