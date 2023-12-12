@@ -78,6 +78,11 @@ func TestPossibleArrangements(t *testing.T) {
 		Expected int
 	}{
 		{"???.### 1,1,3", 1},
+		{".??..??...?##. 1,1,3", 4},
+		{"?#?#?#?#?#?#?#? 1,3,1,6", 1},
+		{"????.#...#... 4,1,1", 1},
+		{"????.######..#####. 1,6,5", 4},
+		{"?###???????? 3,2,1", 10},
 	}
 	for _, testCase := range cases {
 		t.Run(fmt.Sprintf("%s -> %v", testCase.Input, testCase.Expected), func(t *testing.T) {
