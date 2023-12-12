@@ -31,7 +31,6 @@ func getCandidates(record string, groupSizes []int) [][]int {
 		thisGroupsCandidates := []int{}
 		offset := 0
 		for {
-			fmt.Printf("%v %v\n", padded[offset:], offset)
 			pos := regx.FindStringIndex(padded[offset:])
 			if pos == nil {
 				break
@@ -47,13 +46,30 @@ func getCandidates(record string, groupSizes []int) [][]int {
 	return candidates
 }
 
+func remainingGroupArrangements(candidatePositions [][]int, sizes []int, startingPoint int) int {
+	if len(candidatePositions) == 1 {
+		possibleCount := 0
+		for _, pos := range candidatePositions[0] {
+			if pos >= startingPoint {
+				possibleCount++
+			}
+		}
+		return possibleCount
+	}
+	possibleCount := 0
+	for _, pos := range candidatePositions[0] {
+		if pos >= startingPoint {
+			possibleCount += remainingGroupArrangements(candidatePositions[1:], sizes[1:], sizes[0]+pos+1)
+		}
+	}
+	return possibleCount
+}
+
 func PossibleArrangements(input string) int {
 	record, groupSizes := parse(input)
 	candidatePositions := getCandidates(record, groupSizes)
-	for _, v := range candidatePositions {
-		fmt.Printf("%v\n", v)
-	}
-	return 0
+	total := remainingGroupArrangements(candidatePositions, groupSizes, 0)
+	return total
 }
 
 func TestPossibleArrangements(t *testing.T) {
@@ -65,7 +81,7 @@ func TestPossibleArrangements(t *testing.T) {
 	}
 	for _, testCase := range cases {
 		t.Run(fmt.Sprintf("%s -> %v", testCase.Input, testCase.Expected), func(t *testing.T) {
-			assert.Equal(t, PossibleArrangements(testCase.Input), testCase.Expected)
+			assert.Equal(t, testCase.Expected, PossibleArrangements(testCase.Input))
 		})
 	}
 }
