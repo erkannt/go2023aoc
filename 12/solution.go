@@ -45,10 +45,26 @@ func getCandidates(record string, groupSizes []int) [][]int {
 	return candidates
 }
 
+type cacheKey struct {
+	depth         int
+	startingPoint int
+}
+
 type remainingGroupArrangements struct {
 	record             string
 	candidatePositions [][]int
 	sizes              []int
+	cache              map[cacheKey]int
+}
+
+func (r remainingGroupArrangements) memoized(depth int, startingPoint int) int {
+	key := cacheKey{depth: depth, startingPoint: startingPoint}
+	if v, ok := r.cache[key]; ok {
+		return v
+	}
+	result := r.calc(depth, startingPoint)
+	r.cache[key] = result
+	return result
 }
 
 func (r remainingGroupArrangements) calc(depth int, startingPoint int) int {
@@ -64,7 +80,7 @@ func (r remainingGroupArrangements) calc(depth int, startingPoint int) int {
 	possibleCount := 0
 	for _, pos := range r.candidatePositions[depth:][0] {
 		if pos >= startingPoint && !strings.ContainsRune(r.record[startingPoint:pos], '#') {
-			possibleCount += r.calc(depth+1, r.sizes[depth:][0]+pos+1)
+			possibleCount += r.memoized(depth+1, r.sizes[depth:][0]+pos+1)
 		}
 	}
 	return possibleCount
@@ -85,8 +101,9 @@ func PossibleArrangements(input string, unfold bool) int {
 		record:             record,
 		candidatePositions: candidatePositions,
 		sizes:              groupSizes,
+		cache:              make(map[cacheKey]int),
 	}
-	total := calculator.calc(0, 0)
+	total := calculator.memoized(0, 0)
 	return total
 }
 
