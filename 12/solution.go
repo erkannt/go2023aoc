@@ -64,8 +64,17 @@ func remainingGroupArrangements(record string, candidatePositions [][]int, sizes
 	return possibleCount
 }
 
-func PossibleArrangements(input string) int {
+func PossibleArrangements(input string, unfold bool) int {
 	record, groupSizes := parse(input)
+	if unfold {
+		record = strings.Repeat(record, 5)
+		expanded := []int{}
+		for i := 0; i < 5; i++ {
+			expanded = append(expanded, groupSizes...)
+		}
+		groupSizes = expanded
+	}
+	fmt.Printf("%v %v %v\n", input, record, len(groupSizes))
 	candidatePositions := getCandidates(record, groupSizes)
 	total := remainingGroupArrangements(record, candidatePositions, groupSizes, 0)
 	return total
@@ -78,10 +87,13 @@ func main() {
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	total := 0
+	totalPart1 := 0
+	totalPart2 := 0
 	for scanner.Scan() {
-		total += PossibleArrangements(scanner.Text())
+		line := scanner.Text()
+		totalPart1 += PossibleArrangements(line, false)
+		totalPart2 += PossibleArrangements(line, true)
 	}
 
-	println(total)
+	println(totalPart1, totalPart2)
 }
