@@ -29,14 +29,23 @@ func findUnsmudgedValue(orig []string, flipped []string) int {
 	return vLine
 }
 
-func ProblemOne(scanner bufio.Scanner) int {
+func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
+	return 0
+}
+
+func Solve(scanner bufio.Scanner, smudge bool) int {
 	total := 0
 	orig := []string{}
 	flipped := []string{}
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
-			total += findUnsmudgedValue(orig, flipped)
+			unsmudged := findUnsmudgedValue(orig, flipped)
+			if smudge {
+				total += findSmudgedValue(orig, flipped, unsmudged)
+			} else {
+				total += unsmudged
+			}
 
 			orig = []string{}
 			flipped = []string{}
@@ -55,6 +64,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 	}
 	return total
 }
+
 func main() {
 	file, err := os.Open("./input.txt")
 	if err != nil {
@@ -62,7 +72,7 @@ func main() {
 	}
 	defer file.Close()
 
-	println("Problem1:", ProblemOne(*bufio.NewScanner(file)))
-	// file.Seek(0, 0)
-	// println("Problem2:", ProblemTwo(*bufio.NewScanner(file)))
+	println("Problem1:", Solve(*bufio.NewScanner(file), false))
+	file.Seek(0, 0)
+	println("Problem2:", Solve(*bufio.NewScanner(file), true))
 }

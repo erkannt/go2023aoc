@@ -27,6 +27,6 @@ func TestProblemOne(t *testing.T) {
 
 `
 	expected := 405
-	actual := ProblemOne(*bufio.NewScanner(strings.NewReader(input)))
+	actual := Solve(*bufio.NewScanner(strings.NewReader(input)), false)
 	assert.Equal(t, expected, actual)
 }
