@@ -19,6 +19,16 @@ func findReflection(input []string) int {
 	return -1
 }
 
+func findUnsmudgedValue(orig []string, flipped []string) int {
+	hLine := findReflection(orig)
+	if hLine != -1 {
+		return 100 * hLine
+	}
+
+	vLine := findReflection(flipped)
+	return vLine
+}
+
 func ProblemOne(scanner bufio.Scanner) int {
 	total := 0
 	orig := []string{}
@@ -26,15 +36,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
-			hLine := findReflection(orig)
-			if hLine != -1 {
-				total += 100 * hLine
-			}
-
-			vLine := findReflection(flipped)
-			if vLine != -1 {
-				total += vLine
-			}
+			total += findUnsmudgedValue(orig, flipped)
 
 			orig = []string{}
 			flipped = []string{}
