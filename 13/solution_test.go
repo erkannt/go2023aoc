@@ -2,26 +2,39 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+func findReflection(input []string) int {
+	for i := 0; i < len(input); i++ {
+		reflection := true
+		for j := 0; i-j >= 0 && i+j < len(input); j++ {
+			reflection = (input[i+j] == input[i-j]) && reflection
+		}
+		if reflection {
+			return i + 1
+		}
+	}
+	return -1
+}
+
 func ProblemOne(scanner bufio.Scanner) int {
+	total := 0
 	orig := []string{}
 	flipped := []string{}
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
-			fmt.Println("orig")
-			for _, v := range orig {
-				fmt.Printf("%v\n", v)
+			hLine := findReflection(orig)
+			if hLine != -1 {
+				total += 100 * hLine
 			}
-			fmt.Println("flipped")
-			for _, v := range flipped {
-				fmt.Printf("%v\n", v)
+			vLine := findReflection(orig)
+			if vLine != -1 {
+				total += hLine
 			}
 			orig = []string{}
 			flipped = []string{}
@@ -38,7 +51,7 @@ func ProblemOne(scanner bufio.Scanner) int {
 			flipped[i] += string(r)
 		}
 	}
-	return 0
+	return total
 }
 
 func TestProblemOne(t *testing.T) {
