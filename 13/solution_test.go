@@ -9,10 +9,10 @@ import (
 )
 
 func findReflection(input []string) int {
-	for i := 0; i < len(input); i++ {
+	for i := 0; i < len(input)-1; i++ {
 		reflection := true
-		for j := 0; i-j >= 0 && i+j < len(input); j++ {
-			reflection = (input[i+j] == input[i-j]) && reflection
+		for j := 0; i-j >= 0 && i+j+1 < len(input); j++ {
+			reflection = (input[i+j+1] == input[i-j]) && reflection
 		}
 		if reflection {
 			return i + 1
@@ -32,10 +32,12 @@ func ProblemOne(scanner bufio.Scanner) int {
 			if hLine != -1 {
 				total += 100 * hLine
 			}
-			vLine := findReflection(orig)
+
+			vLine := findReflection(flipped)
 			if vLine != -1 {
-				total += hLine
+				total += vLine
 			}
+
 			orig = []string{}
 			flipped = []string{}
 			continue
