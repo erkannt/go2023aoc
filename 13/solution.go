@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 )
@@ -37,8 +38,10 @@ func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
 
 	for i := 0; i < len(orig); i++ {
 		for j := 0; j < len(orig[0]); j++ {
-			smudged := orig
-			smudgedLine := asRunes[i]
+			smudged := make([]string, len(orig))
+			copy(smudged, orig)
+			smudgedLine := make([]rune, len(asRunes[i]))
+			copy(smudgedLine, asRunes[i])
 			if smudged[i][j] == '#' {
 				smudgedLine[j] = '.'
 			} else {
@@ -59,8 +62,10 @@ func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
 
 	for i := 0; i < len(flipped); i++ {
 		for j := 0; j < len(flipped[0]); j++ {
-			smudged := flipped
-			smudgedLine := asRunes[i]
+			smudged := make([]string, len(flipped))
+			copy(smudged, flipped)
+			smudgedLine := make([]rune, len(asRunes[i]))
+			copy(smudgedLine, asRunes[i])
 			if smudged[i][j] == '#' {
 				smudgedLine[j] = '.'
 			} else {
@@ -73,6 +78,7 @@ func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
 			}
 		}
 	}
+	fmt.Println("ooops")
 	return -1
 }
 
