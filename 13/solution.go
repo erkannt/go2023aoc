@@ -30,7 +30,50 @@ func findUnsmudgedValue(orig []string, flipped []string) int {
 }
 
 func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
-	return 0
+	asRunes := [][]rune{}
+	for _, line := range orig {
+		asRunes = append(asRunes, []rune(line))
+	}
+
+	for i := 0; i < len(orig); i++ {
+		for j := 0; j < len(orig[0]); j++ {
+			smudged := orig
+			smudgedLine := asRunes[i]
+			if smudged[i][j] == '#' {
+				smudgedLine[j] = '.'
+			} else {
+				smudgedLine[j] = '#'
+			}
+			smudged[i] = string(smudgedLine)
+			hLine := findReflection(smudged)
+			if hLine != -1 && hLine*100 != unsmudged {
+				return 100 * hLine
+			}
+		}
+	}
+
+	asRunes = [][]rune{}
+	for _, line := range flipped {
+		asRunes = append(asRunes, []rune(line))
+	}
+
+	for i := 0; i < len(flipped); i++ {
+		for j := 0; j < len(flipped[0]); j++ {
+			smudged := flipped
+			smudgedLine := asRunes[i]
+			if smudged[i][j] == '#' {
+				smudgedLine[j] = '.'
+			} else {
+				smudgedLine[j] = '#'
+			}
+			smudged[i] = string(smudgedLine)
+			vLine := findReflection(smudged)
+			if vLine != -1 && vLine != unsmudged {
+				return vLine
+			}
+		}
+	}
+	return -1
 }
 
 func Solve(scanner bufio.Scanner, smudge bool) int {
