@@ -20,6 +20,20 @@ func findReflection(input []string) int {
 	return -1
 }
 
+func findReflections(input []string) []int {
+	reflections := []int{}
+	for i := 0; i < len(input)-1; i++ {
+		reflection := true
+		for j := 0; i-j >= 0 && i+j+1 < len(input); j++ {
+			reflection = (input[i+j+1] == input[i-j]) && reflection
+		}
+		if reflection {
+			reflections = append(reflections, i+1)
+		}
+	}
+	return reflections
+}
+
 func findUnsmudgedValue(orig []string, flipped []string) int {
 	hLine := findReflection(orig)
 	if hLine != -1 {
@@ -48,9 +62,11 @@ func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
 				smudgedLine[j] = '#'
 			}
 			smudged[i] = string(smudgedLine)
-			hLine := findReflection(smudged)
-			if hLine != -1 && hLine*100 != unsmudged {
-				return 100 * hLine
+			reflections := findReflections(smudged)
+			for _, v := range reflections {
+				if v != -1 && v*100 != unsmudged {
+					return v * 100
+				}
 			}
 		}
 	}
@@ -72,13 +88,18 @@ func findSmudgedValue(orig []string, flipped []string, unsmudged int) int {
 				smudgedLine[j] = '#'
 			}
 			smudged[i] = string(smudgedLine)
-			vLine := findReflection(smudged)
-			if vLine != -1 && vLine != unsmudged {
-				return vLine
+			reflections := findReflections(smudged)
+			for _, v := range reflections {
+				if v != -1 && v != unsmudged {
+					return v
+				}
 			}
 		}
 	}
-	fmt.Println("ooops")
+	fmt.Printf("\nunsmudged: %v\n", unsmudged)
+	for _, v := range orig {
+		fmt.Printf("%v\n", v)
+	}
 	return -1
 }
 

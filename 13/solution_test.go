@@ -53,3 +53,26 @@ func TestProblemTwo(t *testing.T) {
 	actual := Solve(*bufio.NewScanner(strings.NewReader(input)), true)
 	assert.Equal(t, expected, actual)
 }
+
+func TestProblemDebugInput(t *testing.T) {
+	input := `.##.###
+.##.###
+.######
+##...##
+#..#.#.
+.##....
+.##....
+#.#....
+...###.
+...###.
+#.#.#..
+.##....
+.##....
+#..#.#.
+##...##
+
+`
+	expected := 900
+	actual := Solve(*bufio.NewScanner(strings.NewReader(input)), true)
+	assert.Equal(t, expected, actual)
+}
